@@ -18,12 +18,12 @@ export const siteConfig = {
       title: "DevOps Engineer",
       dateRange: "January 2025 - Present",
       bullets: [
-        "Deployment and management of applications on Kubernetes and Red Hat OpenShift clusters",
-        "Design and implementation of a GitOps-based CI/CD pipeline with ArgoCD and GitHub Actions",
+        "Design and implementation of a log aggregation pipeline on AWS platform using EKS, Kafka and OpenSearch",
+        "Led technical workshops for the deployment of an healthcare solution on Red Hat OpenShift clusters",
+        "Architecture of a GitOps-based CI/CD pipeline with ArgoCD and GitHub Actions",
         "Creation of custom Helm charts for standardized application deployment across all environments",
-        "Automation of image creation, vulnerability scanning and system patching using Python and Bash scripts",
         "Provisioning of high-availability PostgreSQL and MongoDB databases with encryption using Docker Compose",
-        "Configuration of log aggregation pipelines using FluentBit, Kafka and OpenSearch",
+        "Automation of repetitive tasks and processes using Python and Bash scripts",
       ],
     },
     {
@@ -43,7 +43,7 @@ export const siteConfig = {
       dateRange: "March 2022 - August 2022",
       bullets: [
         "Development and implementation of a project for the master's thesis",
-        "Analyzed and optimized maintenance strategies to enhance system reliability and efficiency",
+        "Conducted analysis and optimization of maintenance strategies to enhance system reliability and efficiency",
       ],
     },
   ],
