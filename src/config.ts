@@ -11,6 +11,7 @@ export const siteConfig = {
   },
   aboutMe:
     "I am a dedicated DevOps Engineer with over 3 years of experience in solution architecture and infrastructure deployment. In my current role at Akkodis, I am responsible for architecting and deploying solutions on cloud and on-premise environments using tools like AWS, Terraform, Ansible, Kubernetes, Docker, Prometheus, Grafana and Python.",
+  skills: ["Solutions Architect", "AWS", "Terraform", "Kubernetes", "Docker"],
   experience: [
     {
       company: "Akkodis",
@@ -31,9 +32,9 @@ export const siteConfig = {
       dateRange: "October 2022 - January 2025",
       bullets: [
         "Execution of an end-to-end migration of a core banking system from on-premise to a hybrid cloud environment",
-        "Conduction of workshops with clients to design scalable cloud solutions aligned with their business objectives",
+        "Conducted workshops with clients to design scalable cloud solutions aligned with their business objectives",
         "Definition of CI/CD pipelines strategies to automate the software delivery process",
-        "Collaborated with cross-functionally teams and translated customer feedback into product requirements",
+        "Collaborated with cross-functionally teams and translated customer feedback into actionable product requirements",
       ],
     },
     {
