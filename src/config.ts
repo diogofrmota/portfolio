@@ -10,8 +10,8 @@ export const siteConfig = {
     github: "https://github.com/diogofrmota",
   },
   aboutMe:
-    "I am a dedicated DevOps Engineer with over 3 years of experience in solution architecture and infrastructure deployment. In my current role at Akkodis, I am responsible for managing and architecting cloud and on-premise environments using tools like AWS, Kubernetes, Docker, Python, Java, Terraform, Ansible, Grafana, Prometheus, PostgreSQL and Helm Charts.",
-  skills: ["Solutions Architect", "AWS", "Terraform", "Kubernetes", "Docker"],
+    "I am a dedicated DevOps Engineer with over 3 years of experience in solution architecture and infrastructure deployment. In my current role at Akkodis, I am responsible for architecting and deploying solutions on cloud and on-premise environments using tools like AWS, Terraform, Ansible, Kubernetes, Docker, Prometheus, Grafana and Python.",
+  //skills: ["Solutions Architect", "AWS", "Terraform", "Kubernetes", "Docker"],
   experience: [
     {
       company: "Akkodis",
@@ -32,9 +32,9 @@ export const siteConfig = {
       dateRange: "October 2022 - January 2025",
       bullets: [
         "Execution of an end-to-end migration of a core banking system from on-premise to a hybrid cloud environment",
-        "Conducted workshops with clients to design scalable cloud solutions aligned with their business objectives",
+        "Conduction of workshops with clients to design scalable cloud solutions aligned with their business objectives",
         "Definition of CI/CD pipelines strategies to automate the software delivery process",
-        "Collaborated with cross-functionally teams and translated customer feedback into actionable product requirements",
+        "Collaborated with cross-functionally teams and translated customer feedback into product requirements",
       ],
     },
     {
@@ -76,7 +76,7 @@ export const siteConfig = {
       degree: "Integrated Master in Industrial Engineering and Management",
       dateRange: "September 2017 - September 2023",
       achievements: [
-        "Member of NEGI - Núcleo de Engenharia e Gestão Industrial for 4 years",
+        "Member of NEGI (Núcleo de Engenharia e Gestão Industrial) for 4 years",
         "Awarded 1st place at NOVA FCT Entrepreneurship Program",
       ],
     },
@@ -85,7 +85,7 @@ export const siteConfig = {
       degree: "Erasmus+ Program",
       dateRange: "September 2021 - March 2022",
       achievements: [
-        "Erasmus+ Program lasting 6 months",
+        "Erasmus+ Program at Nancy, France",
         "All classes and exams done in French",
       ],
     },
