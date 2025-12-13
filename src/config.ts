@@ -18,12 +18,11 @@ export const siteConfig = {
       title: "DevOps Engineer",
       dateRange: "January 2025 - Present",
       bullets: [
-        "Design and implementation of a log aggregation pipeline on AWS platform using EKS, Kafka and OpenSearch",
-        "Led technical workshops for the deployment of an healthcare solution on Red Hat OpenShift clusters",
-        "Architecture of a GitOps-based CI/CD pipeline with ArgoCD and GitHub Actions",
-        "Creation of custom Helm charts for standardized application deployment across all environments",
+        "Led technical workshops for the deployment of a healthcare solution on Red Hat OpenShift clusters",
+        "Migration of a log aggregation pipeline to AWS deployed on EKS using Kafka and OpenSearch",
+        "Architecture of a GitOps CI/CD pipeline with ArgoCD and GitHub Actions",
         "Provisioning of high-availability PostgreSQL and MongoDB databases with encryption using Docker Compose",
-        "Automation of repetitive tasks and processes using Python and Bash scripts",
+        "Automation of repetitive tasks using Python and Bash scripts",
       ],
     },
     {
