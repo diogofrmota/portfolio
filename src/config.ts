@@ -48,16 +48,16 @@ export const siteConfig = {
   ],
   projects: [
     {
-      name: "Self-Hosted Infrastructure (Homelab)",
+      name: "Self-Hosted Infrastructure (Homelab) on a 3 Node Raspberry Pi Cluster",
       description:
-        "Configured a Raspberry Pi 3B+ as bare-metal, headless Debian server with a dashboard for monitoring updates, networking, and storage. Automated smart home IoT lights and switches based on sunrise, sunset, and custom rules using lightweight scheduling.",
+        "Deployed a 3 node bare metal Kubernetes cluster to replicate a real production environment, from hardware assembly to system configuration. Automated application deployment via a GitOps workflow with ArgoCD and Helm Charts. Architected the core networking stack, integrating load balancing (MetalLB), HTTP/HTTPS routing and ingress control (NGINX) and automated TLS management (Cert-Manager). Implemented a monitoring dashboard with Prometheus and Grafana",
       link: "https://github.com/diogofrmota/homelab",
-      skills: ["Docker", "Kubernetes", "Linux", "Monitoring", "Networking"],
+      skills: ["Kubernetes", "Linux", "Automation", "Networking", "Solution Architecture"],
     },
     {
       name: "Full Monitoring Pipeline",
       description:
-        "Built a complete Kubernetes monitoring stack with Prometheus, AlertManager, and Grafana on Minikube using Helm. Prometheus scrapes cluster metrics, AlertManager handles notifications, and Grafana provides real-time dashboards for system observability.",
+        "Built a complete Kubernetes monitoring stack with Prometheus, AlertManager, and Grafana using Helm. Prometheus scrapes cluster metrics, AlertManager handles notifications, and Grafana provides real-time dashboards for system observability.",
       link: "https://github.com/diogofrmota/monitoring-pipeline-in-kubernetes",
       skills: ["Kubernetes", "Prometheus", "AlertManager", "Grafana"],
     },
@@ -66,7 +66,7 @@ export const siteConfig = {
       description:
         "Deployed a high availability MongoDB cluster (3-node replica set) using Docker Compose with automated backups and real-time data replication for fault tolerance.",
       link: "https://github.com/diogofrmota/docker-compose",
-      skills: ["MongoDB", "Docker Compose", "Data Replication", "Backup Automation"],
+      skills: ["MongoDB", "Docker Compose", "Encryption", "Data Replication", "Backup Automation"],
     },
   ],
   education: [
