@@ -14,26 +14,6 @@ export const siteConfig = {
   skills: ["DevOps", "Solutions Architect", "AWS", "Terraform", "Kubernetes", "Docker"],
   experience: [
     {
-      company: "Tech Company",
-      title: "Senior Software Engineer",
-      dateRange: "Jan 2022 - Present",
-      bullets: [
-        "Led development of microservices architecture serving 1M+ users",
-        "Reduced API response times by 40% through optimization",
-        "Mentored team of 5 junior developers",
-      ],
-    },
-    {
-      company: "Startup Inc",
-      title: "Full Stack Developer",
-      dateRange: "Jun 2020 - Dec 2021",
-      bullets: [
-        "Built and launched MVP product from scratch using React and Node.js",
-        "Implemented CI/CD pipeline reducing deployment time by 60%",
-        "Collaborated with product team to define technical requirements",
-      ],
-    },
-    {
       company: "Akkodis",
       title: "DevOps Engineer",
       dateRange: "January 2025 - Present",
@@ -72,22 +52,36 @@ export const siteConfig = {
       name: "Self-Hosted Infrastructure (Homelab)",
       description:
         "Configured a Raspberry Pi 3B+ as bare-metal, headless Debian server with a dashboard for monitoring updates, networking, and storage. Automated smart home IoT lights and switches based on sunrise, sunset, and custom rules using lightweight scheduling.",
-      link: null,
+      link: "https://github.com/diogofrmota/homelab",
       skills: ["Docker", "Kubernetes", "Linux", "Monitoring", "Networking"],
     },
     {
-      name: "Chrome Extension Mastery: Build Full-Stack Extensions with React & Node.js",
+      name: "Full-Stack Web App",
       description:
-        "Master the art of building production-ready, full-stack Chrome Extensions using modern web technologies and best practices",
-      link: "https://fullstackextensions.com/?ref=devportfolio",
-      skills: ["React", "Node.js", "AWS"],
+        "Developed a modern movie review app with decoupled architecture: React.js frontend, Spring Boot REST API backend, and MongoDB. Showcases full-stack development, responsive UI, and client-server separation using RESTful communication.",
+      link: "https://github.com/diogofrmota/full-stack-app",
+      skills: ["Java Spring Boot", "MongoDB", "React"],
     },
     {
-      name: "ExtensionKit",
+      name: "Full Monitoring Pipeline",
       description:
-        "Kit to jump-start your Chrome extension projects with a variety of battle-tested starter templates & examples",
-      link: "https://extensionkit.io/?ref=devportfolio",
-      skills: ["React", "Node.js", "AWS"],
+        "Built a complete Kubernetes monitoring stack with Prometheus, AlertManager, and Grafana on Minikube using Helm. Prometheus scrapes cluster metrics, AlertManager handles notifications, and Grafana provides real-time dashboards for system observability.",
+      link: "https://github.com/diogofrmota/monitoring-pipeline-in-kubernetes",
+      skills: ["Kubernetes", "Prometheus", "AlertManager", "Grafana"],
+    },
+    {
+      name: "Kubernetes Log Aggregation",
+      description:
+        "Implemented centralized log aggregation in Kubernetes using Fluent Bit, Kafka, and OpenSearch. Built on Minikube with Helm, the pipeline collects, parses, and streams pod logs for indexing and visualization via OpenSearch Dashboards and Grafana.",
+      link: "https://github.com/diogofrmota/kubernetes-log-pipeline",
+      skills: ["Fluent Bit", "Kafka", "OpenSearch"],
+    },
+    {
+      name: "High Availability MongoDB Cluster",
+      description:
+        "Deployed a high availability MongoDB cluster (3-node replica set) using Docker Compose with automated backups and real-time data replication for fault tolerance.",
+      link: "https://github.com/diogofrmota/docker-compose",
+      skills: ["MongoDB", "Docker Compose", "Data Replication", "Backup Automation"],
     },
   ],
   education: [
@@ -96,7 +90,8 @@ export const siteConfig = {
       degree: "Integrated Master in Industrial Engineering and Management",
       dateRange: "September 2017 - September 2023",
       achievements: [
-        "Master's Thesis focused on maintenance strategy optimization at Tetra Pak",
+        "Member of NEGI - Núcleo de Engenharia e Gestão Industrial for 4 years",
+        "Awarded 1st place at NOVA FCT Entrepreneurship Program",
       ],
     },
     {
