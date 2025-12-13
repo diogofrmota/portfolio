@@ -1,40 +1,17 @@
 export const siteConfig = {
-  name: "Ryan Fitzgerald",
-  title: "Senior Software Engineer",
-  description: "Portfolio website of Ryan Fitzgerald",
+  name: "Diogo Mota",
+  title: "Senior DevOps Engineer",
+  description: "Portfolio website of Diogo Mota - DevOps Engineer",
   accentColor: "#1d4ed8",
+  location: "Lisbon, PT",
   social: {
-    email: "your-email@example.com",
-    linkedin: "https://linkedin.com/in/yourprofile",
-    twitter: "https://x.com/rfitzio",
-    github: "https://github.com/RyanFitzgerald",
+    email: "diogofrmota@gmail.com",
+    linkedin: "https://linkedin.com/in/diogofrmota",
+    github: "https://github.com/diogofrmota",
   },
   aboutMe:
-    "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem quos asperiores nihil consequatur tempore cupiditate architecto natus commodi corrupti quas quasi facere est, dignissimos odit nam veniam sapiente ut, vitae eligendi ipsum dolor, nostrum ullam impedit! Corrupti ratione mollitia temporibus necessitatibus, consectetur reiciendis recusandae id, dolorum quaerat, vero pariatur. Ratione!",
-  skills: ["Javascript", "React", "Node.js", "Python", "AWS", "Docker"],
-  projects: [
-    {
-      name: "AI Dev Roundup Newsletter",
-      description:
-        "One concise email. Five minutes. Every Tuesday. Essential AI news & trends, production-ready libraries, powerful AI tools, and real-world code examples",
-      link: "https://aidevroundup.com/?ref=devportfolio",
-      skills: ["React", "Node.js", "AWS"],
-    },
-    {
-      name: "Chrome Extension Mastery: Build Full-Stack Extensions with React & Node.js",
-      description:
-        "Master the art of building production-ready, full-stack Chrome Extensions using modern web technologies and best practices",
-      link: "https://fullstackextensions.com/?ref=devportfolio",
-      skills: ["React", "Node.js", "AWS"],
-    },
-    {
-      name: "ExtensionKit",
-      description:
-        "Kit to jump-start your Chrome extension projects with a variety of battle-tested starter templates & examples",
-      link: "https://extensionkit.io/?ref=devportfolio",
-      skills: ["React", "Node.js", "AWS"],
-    },
-  ],
+    "I am a dedicated DevOps Engineer with over 3 years of experience in solution architecture and infrastructure deployment. In my current role at Akkodis, I am responsible for managing and architecting cloud and on-premise environments using tools like AWS, Kubernetes, Docker, Python, Java, Terraform, Ansible, Grafana, Prometheus, PostgreSQL and Helm Charts. Beyond my professional work, I actively maintain a hand-built homelab on a 3-node cluster using multiple Raspberry Pis where I recreate a real production environment. This personal project allows me to enhance my skills in automation, network, virtualization and monitoring with tools like ArgoCD, Kubernetes, Helm Charts, NGINX Ingress Controller, MetalLB, Prometheus, Grafana and Cert-Manager.",
+  skills: ["DevOps", "Solutions Architect", "AWS", "Terraform", "Kubernetes", "Docker"],
   experience: [
     {
       company: "Tech Company",
@@ -57,35 +34,78 @@ export const siteConfig = {
       ],
     },
     {
-      company: "Digital Agency",
-      title: "Frontend Developer",
-      dateRange: "Aug 2018 - May 2020",
+      company: "Akkodis",
+      title: "DevOps Engineer",
+      dateRange: "January 2025 - Present",
       bullets: [
-        "Developed responsive web applications for 20+ clients",
-        "Improved site performance scores by 35% on average",
-        "Introduced modern JavaScript frameworks to legacy codebases",
+        "Deployment and management of applications on Kubernetes and Red Hat OpenShift clusters",
+        "Design and implementation of a GitOps-based CI/CD pipeline with ArgoCD and GitHub Actions",
+        "Creation of custom Helm charts for standardized application deployment across all environments",
+        "Automation of image creation, vulnerability scanning and system patching using Python and Bash scripts",
+        "Provisioning of high-availability PostgreSQL and MongoDB databases with encryption using Docker Compose",
+        "Configuration of log aggregation pipelines using FluentBit, Kafka and OpenSearch",
       ],
+    },
+    {
+      company: "KPMG Portugal",
+      title: "Technology Consultant",
+      dateRange: "October 2022 - January 2025",
+      bullets: [
+        "Execution of an end-to-end migration of a core banking system from on-premise to a hybrid cloud environment on AWS",
+        "Development of cloud transformation roadmaps and migration strategies for client transitions to Azure and AWS platforms",
+        "Definition of CI/CD pipelines strategies to automate the software delivery process",
+        "Performance of architecture, assessment, design and implementation reviews for client systems",
+      ],
+    },
+    {
+      company: "Tetra Pak",
+      title: "Quality - Master Thesis Internship",
+      dateRange: "March 2022 - August 2022",
+      bullets: [
+        "Development and implementation of a project for the master's thesis",
+        "Analyzed and optimized maintenance strategies to enhance system reliability and efficiency",
+      ],
+    },
+  ],
+  projects: [
+    {
+      name: "Self-Hosted Infrastructure (Homelab)",
+      description:
+        "Configured a Raspberry Pi 3B+ as bare-metal, headless Debian server with a dashboard for monitoring updates, networking, and storage. Automated smart home IoT lights and switches based on sunrise, sunset, and custom rules using lightweight scheduling.",
+      link: null,
+      skills: ["Docker", "Kubernetes", "Linux", "Monitoring", "Networking"],
+    },
+    {
+      name: "Chrome Extension Mastery: Build Full-Stack Extensions with React & Node.js",
+      description:
+        "Master the art of building production-ready, full-stack Chrome Extensions using modern web technologies and best practices",
+      link: "https://fullstackextensions.com/?ref=devportfolio",
+      skills: ["React", "Node.js", "AWS"],
+    },
+    {
+      name: "ExtensionKit",
+      description:
+        "Kit to jump-start your Chrome extension projects with a variety of battle-tested starter templates & examples",
+      link: "https://extensionkit.io/?ref=devportfolio",
+      skills: ["React", "Node.js", "AWS"],
     },
   ],
   education: [
     {
-      school: "University Name",
-      degree: "Bachelor of Science in Computer Science",
-      dateRange: "2014 - 2018",
+      school: "NOVA School of Science and Technology",
+      degree: "Integrated Master in Industrial Engineering and Management",
+      dateRange: "September 2017 - September 2023",
       achievements: [
-        "Graduated Magna Cum Laude with 3.8 GPA",
-        "Dean's List all semesters",
-        "President of Computer Science Club",
+        "Master's Thesis focused on maintenance strategy optimization at Tetra Pak",
       ],
     },
     {
-      school: "Online Platform",
-      degree: "Full Stack Development Certificate",
-      dateRange: "2019",
+      school: "Ecole Nationale Supérieure en Génie des Systèmes et de l'Innovation",
+      degree: "Erasmus+ Program",
+      dateRange: "September 2021 - March 2022",
       achievements: [
-        "Completed 500+ hours of coursework",
-        "Built 10+ portfolio projects",
-        "Specialized in React and Node.js",
+        "Erasmus+ Program lasting 6 months",
+        "All classes and exams done in French",
       ],
     },
   ],
