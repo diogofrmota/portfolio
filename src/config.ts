@@ -10,7 +10,7 @@ export const siteConfig = {
     github: "https://github.com/diogofrmota",
   },
   aboutMe:
-    "I am a dedicated DevOps Engineer with over 3 years of experience in solution architecture and infrastructure deployment. In my current role at Akkodis, I am responsible for managing and architecting cloud and on-premise environments using tools like AWS, Kubernetes, Docker, Python, Java, Terraform, Ansible, Grafana, Prometheus, PostgreSQL and Helm Charts. Beyond my professional work, I actively maintain a hand-built homelab on a 3-node cluster using multiple Raspberry Pis where I recreate a real production environment. This personal project allows me to enhance my skills in automation, network, virtualization and monitoring with tools like ArgoCD, Kubernetes, Helm Charts, NGINX Ingress Controller, MetalLB, Prometheus, Grafana and Cert-Manager.",
+    "I am a dedicated DevOps Engineer with over 3 years of experience in solution architecture and infrastructure deployment. In my current role at Akkodis, I am responsible for managing and architecting cloud and on-premise environments using tools like AWS, Kubernetes, Docker, Python, Java, Terraform, Ansible, Grafana, Prometheus, PostgreSQL and Helm Charts.",
   skills: ["DevOps", "Solutions Architect", "AWS", "Terraform", "Kubernetes", "Docker"],
   experience: [
     {
@@ -56,25 +56,11 @@ export const siteConfig = {
       skills: ["Docker", "Kubernetes", "Linux", "Monitoring", "Networking"],
     },
     {
-      name: "Full-Stack Web App",
-      description:
-        "Developed a modern movie review app with decoupled architecture: React.js frontend, Spring Boot REST API backend, and MongoDB. Showcases full-stack development, responsive UI, and client-server separation using RESTful communication.",
-      link: "https://github.com/diogofrmota/full-stack-app",
-      skills: ["Java Spring Boot", "MongoDB", "React"],
-    },
-    {
       name: "Full Monitoring Pipeline",
       description:
         "Built a complete Kubernetes monitoring stack with Prometheus, AlertManager, and Grafana on Minikube using Helm. Prometheus scrapes cluster metrics, AlertManager handles notifications, and Grafana provides real-time dashboards for system observability.",
       link: "https://github.com/diogofrmota/monitoring-pipeline-in-kubernetes",
       skills: ["Kubernetes", "Prometheus", "AlertManager", "Grafana"],
-    },
-    {
-      name: "Kubernetes Log Aggregation",
-      description:
-        "Implemented centralized log aggregation in Kubernetes using Fluent Bit, Kafka, and OpenSearch. Built on Minikube with Helm, the pipeline collects, parses, and streams pod logs for indexing and visualization via OpenSearch Dashboards and Grafana.",
-      link: "https://github.com/diogofrmota/kubernetes-log-pipeline",
-      skills: ["Fluent Bit", "Kafka", "OpenSearch"],
     },
     {
       name: "High Availability MongoDB Cluster",
