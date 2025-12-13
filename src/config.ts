@@ -11,7 +11,7 @@ export const siteConfig = {
   },
   aboutMe:
     "I am a dedicated DevOps Engineer with over 3 years of experience in solution architecture and infrastructure deployment. In my current role at Akkodis, I am responsible for managing and architecting cloud and on-premise environments using tools like AWS, Kubernetes, Docker, Python, Java, Terraform, Ansible, Grafana, Prometheus, PostgreSQL and Helm Charts.",
-  skills: ["DevOps", "Solutions Architect", "AWS", "Terraform", "Kubernetes", "Docker"],
+  skills: ["Solutions Architect", "AWS", "Terraform", "Kubernetes", "Docker"],
   experience: [
     {
       company: "Akkodis",
@@ -31,15 +31,15 @@ export const siteConfig = {
       title: "Technology Consultant",
       dateRange: "October 2022 - January 2025",
       bullets: [
-        "Execution of an end-to-end migration of a core banking system from on-premise to a hybrid cloud environment on AWS",
-        "Development of cloud transformation roadmaps and migration strategies for client transitions to Azure and AWS platforms",
+        "Execution of an end-to-end migration of a core banking system from on-premise to a hybrid cloud environment",
+        "Conducted workshops with clients to design scalable cloud solutions aligned with their business objectives",
         "Definition of CI/CD pipelines strategies to automate the software delivery process",
-        "Performance of architecture, assessment, design and implementation reviews for client systems",
+        "Collaborated with cross-functionally teams and translated customer feedback into actionable product requirements",
       ],
     },
     {
       company: "Tetra Pak",
-      title: "Quality - Master Thesis Internship",
+      title: "Master Thesis Internship",
       dateRange: "March 2022 - August 2022",
       bullets: [
         "Development and implementation of a project for the master's thesis",
