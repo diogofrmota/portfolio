@@ -11,7 +11,6 @@ export const siteConfig = {
   },
   aboutMe:
     "I am a dedicated DevOps Engineer with over 3 years of experience in solution architecture and infrastructure deployment. In my current role at Akkodis, I am responsible for architecting and deploying solutions on cloud and on-premise environments using tools like AWS, Terraform, Ansible, Kubernetes, Docker, Prometheus, Grafana and Python.",
-  //skills: ["Solutions Architect", "AWS", "Terraform", "Kubernetes", "Docker"],
   experience: [
     {
       company: "Akkodis",
