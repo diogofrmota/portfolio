@@ -10,18 +10,19 @@ export const siteConfig = {
     github: "https://github.com/diogofrmota",
   },
   aboutMe:
-    "I am a dedicated DevOps Engineer with over 3 years of experience in solution architecture and infrastructure deployment. In my current role at Akkodis, I am responsible for architecting and deploying solutions on cloud (AWS) and on-premise environments using tools like Terraform, Ansible, Kubernetes, Docker, Prometheus, Grafana and Python.",
+    "I am a dedicated DevOps Engineer with over 3 years of experience in solution architecture and infrastructure deployment. In my current role at Akkodis, I am responsible for architecting and deploying solutions on cloud (AWS) and on-premise environments using tools like Terraform, Ansible, Kubernetes, Docker, Prometheus, Grafana, Python and Java.",
   skills: ["Solutions Architect", "AWS", "Terraform", "Kubernetes", "Docker"],
   experience: [
     {
       company: "Akkodis",
-      title: "DevOps Engineer",
+      title: "Senior DevOps Engineer",
       dateRange: "January 2025 - Present",
       bullets: [
         "Led technical workshops for deploying a healthcare solution on Red Hat OpenShift clusters",
         "Architected the migration from an on-premise environment to an Amazon EKS infrastructure",
         "Deployed a logging pipeline using Fluent Bit, Kafka, and OpenSearch on Kubernetes",
-        "Implemented a GitOps CI/CD pipeline with ArgoCD to automate deployments",
+        "Implemented a GitOps CI/CD pipeline with ArgoCD and Helm Charts to automate deployments",
+        "Built a monitoring dashboard in Grafana with Prometheus to track infrastructure metrics",
         "Provided on-call support and incident response for applications in production",
       ],
     },
@@ -57,7 +58,7 @@ export const siteConfig = {
     {
       name: "Full Monitoring Pipeline",
       description:
-        "Built a complete Kubernetes monitoring stack with Prometheus, AlertManager, and Grafana using Helm. Prometheus scrapes cluster metrics, AlertManager handles notifications, and Grafana provides real-time dashboards for system observability.",
+        "Built a complete Kubernetes monitoring stack with Prometheus, AlertManager, and Grafana using Helm. Prometheus scrapes cluster metrics, AlertManager handles notifications, and Grafana provides real-time dashboards for system observability",
       link: "https://github.com/diogofrmota/monitoring-pipeline-in-kubernetes",
       skills: ["Kubernetes", "Prometheus", "AlertManager", "Grafana"],
     },
