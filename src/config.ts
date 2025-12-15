@@ -10,7 +10,7 @@ export const siteConfig = {
     github: "https://github.com/diogofrmota",
   },
   aboutMe:
-    "I am a dedicated DevOps Engineer with over 3 years of experience in solution architecture and infrastructure deployment. In my current role at Akkodis, I am responsible for architecting and deploying solutions on cloud and on-premise environments using tools like AWS, Terraform, Ansible, Kubernetes, Docker, Prometheus, Grafana and Python.",
+    "I am a dedicated DevOps Engineer with over 3 years of experience in solution architecture and infrastructure deployment. In my current role at Akkodis, I am responsible for architecting and deploying solutions on cloud (AWS) and on-premise environments using tools like Terraform, Ansible, Kubernetes, Docker, Prometheus, Grafana and Python.",
   skills: ["Solutions Architect", "AWS", "Terraform", "Kubernetes", "Docker"],
   experience: [
     {
@@ -18,11 +18,11 @@ export const siteConfig = {
       title: "DevOps Engineer",
       dateRange: "January 2025 - Present",
       bullets: [
-        "Led technical workshops for the deployment of a healthcare solution on Red Hat OpenShift clusters",
-        "Migration of a log aggregation pipeline to AWS deployed on EKS using Kafka and OpenSearch",
-        "Architecture of a GitOps CI/CD pipeline with ArgoCD and GitHub Actions",
-        "Provisioning of high-availability PostgreSQL and MongoDB databases with encryption using Docker Compose",
-        "Automation of repetitive tasks using Python and Bash scripts",
+        "Led technical workshops for deploying a healthcare solution on Red Hat OpenShift clusters",
+        "Architected the migration from an on-premise environment to an Amazon EKS infrastructure",
+        "Deployed a logging pipeline using Fluent Bit, Kafka, and OpenSearch on Kubernetes",
+        "Implemented a GitOps CI/CD pipeline with ArgoCD to automate deployments",
+        "Provided on-call support and incident response for applications in production",
       ],
     },
     {
@@ -75,7 +75,7 @@ export const siteConfig = {
       degree: "Integrated Master in Industrial Engineering and Management",
       dateRange: "September 2017 - September 2023",
       achievements: [
-        "Member of NEGI (Núcleo de Engenharia e Gestão Industrial) for 4 years",
+        "Elected Chief Presiding Officer of NEGI (Núcleo de Engenharia e Gestão Industrial)",
         "Awarded 1st place at NOVA FCT Entrepreneurship Program",
       ],
     },
