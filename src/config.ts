@@ -56,7 +56,7 @@ export const siteConfig = {
       skills: ["Kubernetes", "Linux", "Automation", "Networking", "Solution Architecture"],
     },
     {
-      name: "CI/CD Pipeline on AWS Infrastructure with Terraform, Ansible and Jenkins",
+      name: "CI/CD Pipeline on AWS with Terraform, Ansible and Jenkins",
       description:
         "Architected and deployed a AWS infrastructure using Infrastructure as Code (Terraform) and configuration management (Ansible). Implemented a full CI/CD pipeline with Jenkins, triggered via GitHub webhooks, for automated build, test, and deployment processes. Containerized applications using Docker for consistent deployment across environments",
       link: "https://github.com/diogofrmota/aws-ci-cd-terraform-ansible",
