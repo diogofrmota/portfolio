@@ -56,18 +56,18 @@ export const siteConfig = {
       skills: ["Kubernetes", "Linux", "Automation", "Networking", "Solution Architecture"],
     },
     {
+      name: "CI/CD Pipeline on AWS Infrastructure with Terraform, Ansible and Jenkins",
+      description:
+        "Architected and deployed a AWS infrastructure using Infrastructure as Code (Terraform) and configuration management (Ansible). Implemented a full CI/CD pipeline with Jenkins, triggered via GitHub webhooks, for automated build, test, and deployment processes. Containerized applications using Docker for consistent deployment across environments",
+      link: "https://github.com/diogofrmota/aws-ci-cd-terraform-ansible",
+      skills: ["AWS", "Terraform", "Ansible", "Jenkins", "CI/CD"],
+    },
+    {
       name: "Full Monitoring Pipeline",
       description:
         "Built a complete Kubernetes monitoring stack with Prometheus, AlertManager, and Grafana using Helm. Prometheus scrapes cluster metrics, AlertManager handles notifications, and Grafana provides real-time dashboards for system observability",
       link: "https://github.com/diogofrmota/monitoring-pipeline-in-kubernetes",
       skills: ["Kubernetes", "Prometheus", "AlertManager", "Grafana"],
-    },
-    {
-      name: "High Availability MongoDB Cluster",
-      description:
-        "Deployed a high availability MongoDB cluster (3-node replica set) using Docker Compose with automated backups and real-time data replication for fault tolerance.",
-      link: "https://github.com/diogofrmota/docker-compose",
-      skills: ["MongoDB", "Docker Compose", "Encryption", "Data Replication", "Backup Automation"],
     },
   ],
   education: [
