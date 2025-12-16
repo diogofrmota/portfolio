@@ -10,7 +10,7 @@ export const siteConfig = {
     github: "https://github.com/diogofrmota",
   },
   aboutMe:
-    "I am a dedicated DevOps Engineer with over 3 years of experience in solution architecture and infrastructure deployment. In my current role at Akkodis, I am responsible for architecting and deploying solutions on cloud (AWS) and on-premise environments using tools like Terraform, Ansible, Kubernetes, Docker, Prometheus, Grafana, Python and Java.",
+    "I am a dedicated DevOps Engineer with over 3 years of experience in solution architecture and infrastructure deployment. In my current role at Akkodis, I am responsible for architecting and deploying solutions on cloud (AWS) and on-premise environments using tools like Terraform, Ansible, Kubernetes, Docker, Prometheus, Grafana, Python and Java",
   skills: ["Solutions Architect", "AWS", "Terraform", "Kubernetes", "Docker"],
   experience: [
     {
