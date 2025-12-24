@@ -18,7 +18,7 @@
     rel="stylesheet"
   />
 
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="../css/styles.css" />
   <style>
     .experience-section {
       margin-bottom: 2.5rem;
@@ -101,12 +101,24 @@
     .back-link {
       margin-top: 2rem;
     }
+    
+    /* Make sure all text uses the same font */
+    .section-title,
+    .company-title,
+    .date-range,
+    .bullets li,
+    .school-name,
+    .degree,
+    .achievements li {
+      font-family: 'IBM Plex Mono', monospace;
+    }
   </style>
 </head>
 <body>
   <main class="main-container">
     <div class="content">
-      <h1>experience</h1>
+      <!-- Changed from h1 to p with name class to match homepage -->
+      <p class="name">experience</p>
       
       <!-- Professional Experience -->
       <div class="experience-section">
@@ -192,6 +204,6 @@
     </div>
   </main>
 
-  <script src="js/main.js"></script>
+  <script src="../js/main.js"></script>
 </body>
 </html>
