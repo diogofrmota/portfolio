@@ -34,7 +34,7 @@ month_names = {
 }
 
 # Read the HTML file
-html_file_path = "./index.html"
+html_file_path = "../benfica/index.html"
 with open(html_file_path, 'r', encoding='utf-8') as file:
     html_content = file.read()
 

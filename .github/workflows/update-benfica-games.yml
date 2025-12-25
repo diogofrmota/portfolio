@@ -1,0 +1,48 @@
+name: Update Benfica Games
+
+on:
+  schedule:
+    # Runs every 24 hours (at 00:00 UTC)
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allows manual triggering
+    inputs:
+      reason:
+        description: 'Reason for manual run'
+        required: false
+        default: 'Manual trigger'
+
+jobs:
+  update-games:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        # Use personal access token to commit back
+        token: ${{ secrets.TOKEN }}
+        # Fetch all history for proper commits
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        pip install requests
+
+    - name: Update Benfica games
+      env:
+        FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
+      run: |
+        cd scripts
+        python next-benfica-games.py
+
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add benfica/index.html
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Update Benfica games - $(date +'%Y-%m-%d')" && git push)
