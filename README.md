@@ -1,3 +1,4 @@
-# Personal Website
+Personal website.
 
-Portfolio web page.
+Static HTML, CSS, and minimal JavaScript.
+Hosted with GitHub Pages.
