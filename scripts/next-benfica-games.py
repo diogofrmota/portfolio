@@ -44,7 +44,7 @@ for match in home_games:
     date_iso = match.get("utcDate", "")
     if date_iso:
         date_obj = datetime.fromisoformat(date_iso.replace("Z", "+00:00"))
-        day = date_obj.day
+        day = str(date_obj.day).zfill(2)
         month_num = date_obj.month
         month_name = month_names.get(month_num, f"Month{month_num}")
         date_str = f"{day}/{month_name}"
@@ -54,10 +54,10 @@ for match in home_games:
     away_name = match.get("awayTeam", {}).get("name", "")
     
     # Create the game line
-    games_html += f'      <p>{date_str} - Sport Lisboa e Benfica vs {away_name}</p>\n'
+    games_html += f'      <p>{date_str} - Benfica vs {away_name}</p>\n'
 
 # Update the games section in HTML
-start_marker = '      <p><a class="link">next benfica games at estádio da luz:</a></p>\n      \n'
+start_marker = '      <p><a class="link">next benfica games at home:</a></p>\n      \n'
 end_marker = '      <p>last updated:'
 
 # Find the section to replace

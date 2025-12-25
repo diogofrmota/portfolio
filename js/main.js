@@ -96,13 +96,13 @@ document.addEventListener('DOMContentLoaded', function () {
       
       // Get only the game paragraphs
       const allParagraphs = contentDiv.querySelectorAll('p');
-      let gamesText = 'Next Benfica games at Estádio da Luz:\n\n';
+      let gamesText = 'Next Benfica games at home:\n\n';
       
       // Loop through paragraphs and extract only game information
       allParagraphs.forEach(p => {
         const text = p.textContent.trim();
         // Check if it's a game line
-        if (text.includes(' - Sport Lisboa e Benfica vs ')) {
+        if (text.includes(' - Benfica vs ')) {
           gamesText += text + '\n';
         }
       });
