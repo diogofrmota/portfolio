@@ -78,3 +78,71 @@ document.addEventListener('DOMContentLoaded', function () {
   // Restore scroll on back/forward
   window.addEventListener('popstate', restoreScrollPosition);
 });
+
+  // js/main.js
+document.addEventListener('DOMContentLoaded', function () {
+  // Theme handling
+  const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+  function updateTheme() {
+    if (prefersDarkScheme.matches) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }
+
+  prefersDarkScheme.addEventListener('change', updateTheme);
+  updateTheme();
+
+  // Share functionality for Benfica page
+  const shareLink = document.getElementById('share-link');
+  
+  if (shareLink) {
+    shareLink.addEventListener('click', function(event) {
+      event.preventDefault();
+      
+      // Get page information
+      const pageTitle = document.title;
+      const pageUrl = window.location.href;
+      
+      // Get all game paragraphs
+      const allParagraphs = document.querySelectorAll('.content p');
+      let gamesInfo = '';
+      
+      // Get games text (skip the first two paragraphs)
+      for (let i = 2; i < allParagraphs.length; i++) {
+        const text = allParagraphs[i].textContent.trim();
+        if (text.includes('last updated:')) {
+          break;
+        }
+        gamesInfo += text + '\n';
+      }
+      
+      // Get last updated text
+      const lastUpdated = document.querySelector('p:contains("last updated:")')?.textContent || '';
+      
+      // Create share text
+      const shareText = `${pageTitle}\n\nNext Benfica Games at Estádio da Luz:\n\n${gamesInfo}\n${lastUpdated}\n\n${pageUrl}`;
+      
+      // Copy to clipboard
+      navigator.clipboard.writeText(shareText).then(() => {
+        // Show simple alert
+        alert('Page info copied to clipboard!');
+      }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = shareText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+          document.execCommand('copy');
+          alert('Page info copied to clipboard!');
+        } catch {
+          alert('Failed to copy. Please copy manually:\n\n' + shareText);
+        }
+        document.body.removeChild(textArea);
+      });
+    });
+  }
+});

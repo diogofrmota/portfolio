@@ -54,7 +54,7 @@ for match in home_games:
     away_name = match.get("awayTeam", {}).get("name", "")
     
     # Create the game line
-    games_html += f'      <p>{date_str} - <strong>Sport Lisboa e Benfica</strong> vs {away_name}</p>\n'
+    games_html += f'      <p>{date_str} - Sport Lisboa e Benfica vs {away_name}</p>\n'
 
 # Update the games section in HTML
 start_marker = '      <p><a class="link">next benfica games at estádio da luz:</a></p>\n      \n'
