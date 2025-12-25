@@ -78,54 +78,66 @@ document.addEventListener('DOMContentLoaded', function () {
   // Restore scroll on back/forward
   window.addEventListener('popstate', restoreScrollPosition);
 
-  // Share functionality for Benfica page - WORKING VERSION
+  // Share functionality for Benfica page - FIXED VERSION
   const shareLink = document.getElementById('share-link');
-  
+
   if (shareLink) {
     shareLink.addEventListener('click', function(event) {
       event.preventDefault();
       
-      // Get all text from the content area
+      // Get the content div
       const contentDiv = document.querySelector('.content');
       if (!contentDiv) {
         alert('Error: Could not find page content');
         return;
       }
       
-      // Get all text content
-      const pageText = contentDiv.innerText || contentDiv.textContent;
-      const pageUrl = window.location.href;
+      // Get only the game paragraphs (excluding header, links, and last updated)
+      const allParagraphs = contentDiv.querySelectorAll('p');
+      let gamesText = 'Next Benfica games at Estádio da Luz:\n\n';
       
-      // Create the share text with page URL at the bottom
-      const shareText = pageText + '\n\n' + pageUrl;
+      // Loop through paragraphs and extract only game information
+      allParagraphs.forEach(p => {
+        const text = p.textContent.trim();
+        // Check if it's a game line (contains "vs" and a date pattern)
+        if (text.includes(' - Sport Lisboa e Benfica vs ')) {
+          gamesText += text + '\n';
+        }
+      });
+      
+      // Add the page URL at the bottom
+      const pageUrl = window.location.href;
+      const shareText = gamesText + '\n' + pageUrl;
       
       // Try modern clipboard API first
       if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(shareText).then(
           function() {
-            // Success - show notification
-            const notification = document.getElementById('share-notification');
-            if (notification) {
-              notification.style.display = 'block';
-              setTimeout(() => {
-                notification.style.display = 'none';
-              }, 2000);
-            } else {
-              alert('Page info copied to clipboard!');
-            }
+            showNotification();
           },
           function() {
-            // Modern API failed, use fallback
             copyWithFallback(shareText);
           }
         );
       } else {
-        // Use fallback for older browsers
         copyWithFallback(shareText);
       }
     });
   }
-  
+
+  // Show notification helper
+  function showNotification() {
+    const notification = document.getElementById('share-notification');
+    if (notification) {
+      notification.style.display = 'block';
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 2000);
+    } else {
+      alert('Games copied to clipboard!');
+    }
+  }
+
   // Fallback copy function
   function copyWithFallback(text) {
     const textarea = document.createElement('textarea');
@@ -138,15 +150,7 @@ document.addEventListener('DOMContentLoaded', function () {
     try {
       const successful = document.execCommand('copy');
       if (successful) {
-        const notification = document.getElementById('share-notification');
-        if (notification) {
-          notification.style.display = 'block';
-          setTimeout(() => {
-            notification.style.display = 'none';
-          }, 2000);
-        } else {
-          alert('Page info copied to clipboard!');
-        }
+        showNotification();
       } else {
         alert('Could not copy automatically. Please select and copy manually.');
       }
@@ -157,4 +161,3 @@ document.addEventListener('DOMContentLoaded', function () {
     
     document.body.removeChild(textarea);
   }
-});
