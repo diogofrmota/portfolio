@@ -78,10 +78,47 @@ document.addEventListener('DOMContentLoaded', function () {
   // Restore scroll on back/forward
   window.addEventListener('popstate', restoreScrollPosition);
 
-  // Share functionality for Benfica page - FIXED VERSION
+  // Share functionality for Benfica page
   const shareLink = document.getElementById('share-link');
 
   if (shareLink) {
+    // Helper function to show notification
+    function showNotification() {
+      const notification = document.getElementById('share-notification');
+      if (notification) {
+        notification.style.display = 'block';
+        setTimeout(() => {
+          notification.style.display = 'none';
+        }, 2000);
+      } else {
+        alert('Games copied to clipboard!');
+      }
+    }
+
+    // Fallback copy function
+    function copyWithFallback(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showNotification();
+        } else {
+          alert('Could not copy automatically. Please select and copy manually.');
+        }
+      } catch (err) {
+        console.error('Copy failed:', err);
+        alert('Copy failed. Please select and copy manually.');
+      }
+      
+      document.body.removeChild(textarea);
+    }
+
     shareLink.addEventListener('click', function(event) {
       event.preventDefault();
       
@@ -124,40 +161,4 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   }
-
-  // Show notification helper
-  function showNotification() {
-    const notification = document.getElementById('share-notification');
-    if (notification) {
-      notification.style.display = 'block';
-      setTimeout(() => {
-        notification.style.display = 'none';
-      }, 2000);
-    } else {
-      alert('Games copied to clipboard!');
-    }
-  }
-
-  // Fallback copy function
-  function copyWithFallback(text) {
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    textarea.style.position = 'fixed';
-    textarea.style.opacity = '0';
-    document.body.appendChild(textarea);
-    textarea.select();
-    
-    try {
-      const successful = document.execCommand('copy');
-      if (successful) {
-        showNotification();
-      } else {
-        alert('Could not copy automatically. Please select and copy manually.');
-      }
-    } catch (err) {
-      console.error('Copy failed:', err);
-      alert('Copy failed. Please select and copy manually.');
-    }
-    
-    document.body.removeChild(textarea);
-  }
+});
