@@ -15,23 +15,14 @@ resp = requests.get(API_URL, headers=headers, params=params)
 resp.raise_for_status()
 matches = resp.json().get("matches", [])
 
-# ANSI codes
-BOLD = "\033[1m"
-UNDERLINE = "\033[4m"
-RESET = "\033[0m"
 TARGET_NAME = "Sport Lisboa e Benfica"
 
-print(f"{UNDERLINE}Next Benfica games at Estádio da Luz:{RESET}\n")
-
+# Get only home games
 home_games = []
 for match in matches:
     home_name = match.get("homeTeam", {}).get("name", "")
-
-    # Only collect home games
     if home_name == TARGET_NAME:
         home_games.append(match)
-
-    # Stop when we have 5 home games
     if len(home_games) >= 5:
         break
 
@@ -42,6 +33,13 @@ month_names = {
     9: "September", 10: "October", 11: "November", 12: "December"
 }
 
+# Read the HTML file
+html_file_path = "./index.html"
+with open(html_file_path, 'r', encoding='utf-8') as file:
+    html_content = file.read()
+
+# Generate the games HTML
+games_html = ""
 for match in home_games:
     date_iso = match.get("utcDate", "")
     if date_iso:
@@ -52,12 +50,34 @@ for match in home_games:
         date_str = f"{day}/{month_name}"
     else:
         date_str = "TBD"
-
+    
     away_name = match.get("awayTeam", {}).get("name", "")
+    
+    # Create the game line
+    games_html += f'      <p>{date_str} - <strong>Sport Lisboa e Benfica</strong> vs {away_name}</p>\n'
 
-    # Format with Benfica in bold
-    output = f"{date_str} - {BOLD}{TARGET_NAME}{RESET} vs {away_name}"
-    print(output)
+# Update the games section in HTML
+start_marker = '      <p><a class="link">next benfica games at estádio da luz:</a></p>\n      \n'
+end_marker = '      <p>last updated:'
 
-print()
-print(f"last updated: {datetime.now().strftime('%d/%m/%Y')}")
+# Find the section to replace
+start_index = html_content.find(start_marker) + len(start_marker)
+end_index = html_content.find(end_marker)
+
+# Create new HTML content
+new_html_content = html_content[:start_index] + games_html + html_content[end_index:]
+
+# Update the last updated date
+current_date = datetime.now().strftime("%d/%m/%Y")
+updated_marker = '      <p>last updated: '
+date_start = new_html_content.find(updated_marker) + len(updated_marker)
+date_end = new_html_content.find('</p>', date_start)
+new_html_content = new_html_content[:date_start] + current_date + new_html_content[date_end:]
+
+# Write back to file
+with open(html_file_path, 'w', encoding='utf-8') as file:
+    file.write(new_html_content)
+
+print(f"HTML file updated successfully!")
+print(f"Updated {len(home_games)} games")
+print(f"Last updated: {current_date}")
