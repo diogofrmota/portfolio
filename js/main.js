@@ -78,61 +78,83 @@ document.addEventListener('DOMContentLoaded', function () {
   // Restore scroll on back/forward
   window.addEventListener('popstate', restoreScrollPosition);
 
-  // Share functionality for Benfica page
+  // Share functionality for Benfica page - WORKING VERSION
   const shareLink = document.getElementById('share-link');
   
   if (shareLink) {
     shareLink.addEventListener('click', function(event) {
       event.preventDefault();
       
-      // Get page information
-      const pageTitle = document.title;
+      // Get all text from the content area
+      const contentDiv = document.querySelector('.content');
+      if (!contentDiv) {
+        alert('Error: Could not find page content');
+        return;
+      }
+      
+      // Get all text content
+      const pageText = contentDiv.innerText || contentDiv.textContent;
       const pageUrl = window.location.href;
       
-      // Get all game paragraphs
-      const allParagraphs = document.querySelectorAll('.content p');
-      let gamesInfo = '';
+      // Create the share text with page URL at the bottom
+      const shareText = pageText + '\n\n' + pageUrl;
       
-      // Get games text (skip the first two paragraphs)
-      for (let i = 2; i < allParagraphs.length; i++) {
-        const text = allParagraphs[i].textContent.trim();
-        if (text.includes('last updated:')) {
-          break;
-        }
-        gamesInfo += text + '\n';
+      // Try modern clipboard API first
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(shareText).then(
+          function() {
+            // Success - show notification
+            const notification = document.getElementById('share-notification');
+            if (notification) {
+              notification.style.display = 'block';
+              setTimeout(() => {
+                notification.style.display = 'none';
+              }, 2000);
+            } else {
+              alert('Page info copied to clipboard!');
+            }
+          },
+          function() {
+            // Modern API failed, use fallback
+            copyWithFallback(shareText);
+          }
+        );
+      } else {
+        // Use fallback for older browsers
+        copyWithFallback(shareText);
       }
-      
-      // Get last updated text
-      let lastUpdated = '';
-      const allParagraphsList = document.querySelectorAll('.content p');
-      for (const p of allParagraphsList) {
-        if (p.textContent.includes('last updated:')) {
-          lastUpdated = p.textContent;
-          break;
-        }
-      }
-      
-      // Create share text
-      const shareText = `${pageTitle}\n\nNext Benfica Games at Estádio da Luz:\n\n${gamesInfo}\n${lastUpdated}\n\n${pageUrl}`;
-      
-      // Copy to clipboard
-      navigator.clipboard.writeText(shareText).then(() => {
-        // Show simple alert
-        alert('Page info copied to clipboard!');
-      }).catch(() => {
-        // Fallback for older browsers
-        const textArea = document.createElement('textarea');
-        textArea.value = shareText;
-        document.body.appendChild(textArea);
-        textArea.select();
-        try {
-          document.execCommand('copy');
-          alert('Page info copied to clipboard!');
-        } catch {
-          alert('Failed to copy. Please copy manually:\n\n' + shareText);
-        }
-        document.body.removeChild(textArea);
-      });
     });
+  }
+  
+  // Fallback copy function
+  function copyWithFallback(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    
+    try {
+      const successful = document.execCommand('copy');
+      if (successful) {
+        const notification = document.getElementById('share-notification');
+        if (notification) {
+          notification.style.display = 'block';
+          setTimeout(() => {
+            notification.style.display = 'none';
+          }, 2000);
+        } else {
+          alert('Page info copied to clipboard!');
+        }
+      } else {
+        alert('Could not copy automatically. Please select and copy manually.');
+      }
+    } catch (err) {
+      console.error('Copy failed:', err);
+      alert('Copy failed. Please select and copy manually.');
+    }
+    
+    document.body.removeChild(textarea);
   }
 });
