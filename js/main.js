@@ -77,23 +77,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Restore scroll on back/forward
   window.addEventListener('popstate', restoreScrollPosition);
-});
-
-  // js/main.js
-document.addEventListener('DOMContentLoaded', function () {
-  // Theme handling
-  const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-
-  function updateTheme() {
-    if (prefersDarkScheme.matches) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }
-
-  prefersDarkScheme.addEventListener('change', updateTheme);
-  updateTheme();
 
   // Share functionality for Benfica page
   const shareLink = document.getElementById('share-link');
@@ -120,7 +103,14 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       
       // Get last updated text
-      const lastUpdated = document.querySelector('p:contains("last updated:")')?.textContent || '';
+      let lastUpdated = '';
+      const allParagraphsList = document.querySelectorAll('.content p');
+      for (const p of allParagraphsList) {
+        if (p.textContent.includes('last updated:')) {
+          lastUpdated = p.textContent;
+          break;
+        }
+      }
       
       // Create share text
       const shareText = `${pageTitle}\n\nNext Benfica Games at Estádio da Luz:\n\n${gamesInfo}\n${lastUpdated}\n\n${pageUrl}`;
