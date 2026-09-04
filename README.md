@@ -1,4 +1,8 @@
-Personal website.
+Personal website and apps built with Next.js.
 
-Static HTML, CSS, and minimal JavaScript.
-Hosted with GitHub Pages.
+```bash
+npm install
+npm run dev
+```
+
+Google login and deployment setup: [SETUP.md](SETUP.md).
