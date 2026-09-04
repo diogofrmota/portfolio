@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { createPartnerInvite, joinPartnerSpace, saveCouplePlannerData } from './actions';
 import styles from './couple-planner.module.css';
 
 const STORAGE_KEY = 'couple-planner-dashboard-v1';
@@ -183,18 +184,75 @@ function AddDialog({ section, onClose, onSubmit }) {
   return <div className={styles.backdrop} role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><section ref={dialogRef} className={styles.dialog} role="dialog" aria-modal="true" aria-labelledby="add-dialog-title"><button className={styles.dialogClose} type="button" onClick={onClose} aria-label="Close dialog"><Icon name="close" /></button><span className={styles.eyebrow}>Shared space</span><h2 id="add-dialog-title">{meta.action}</h2><p>Add the details now. You can always refine the plan together later.</p><form onSubmit={submit}><label>Title<input ref={inputRef} name="title" required maxLength="80" placeholder={section === 'tasks' ? 'What needs doing?' : `Name your ${section === 'calendar' ? 'activity' : 'idea'}`} /></label><label>Details<textarea name="detail" rows="3" maxLength="180" placeholder="Add a useful note (optional)" /></label>{(section === 'calendar' || section === 'tasks' || section === 'trips') && <label>Date<input name="date" type="date" required={section === 'calendar'} /></label>}{section !== 'calendar' && section !== 'tasks' && <label>Status or category<input name="tag" maxLength="30" placeholder="e.g. Favourite, Planning" /></label>}<div className={styles.formActions}><button type="button" onClick={onClose}>Cancel</button><button type="submit">Save to our space</button></div></form></section></div>;
 }
 
-export default function CouplePlannerDashboard({ userName, today }) {
-  const [active, setActive] = useState('calendar');
-  const [data, setData] = useState(() => defaultData(today, userName));
-  const [cursor, setCursor] = useState(() => new Date(`${today}T12:00:00`));
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [ready, setReady] = useState(false);
+function ShareDialog({ workspace, onClose }) {
+  const dialogRef = useRef(null);
+  const inputRef = useRef(null);
+  const [invite, setInvite] = useState(workspace.invite);
+  const [pending, setPending] = useState(false);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
-    try { const saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY)); if (saved && typeof saved === 'object') setData((current) => ({ ...current, ...saved })); } catch { /* Keep defaults when storage is unavailable or malformed. */ }
+    const previousFocus = document.activeElement;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    inputRef.current?.focus();
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') onClose();
+      if (event.key !== 'Tab') return;
+      const focusable = dialogRef.current?.querySelectorAll('button:not([disabled]), input:not([disabled])');
+      if (!focusable?.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      previousFocus?.focus?.();
+    };
+  }, [onClose]);
+
+  async function createInvite() {
+    setPending(true); setMessage('');
+    try { setInvite(await createPartnerInvite()); }
+    catch (error) { setMessage(error.message || 'Could not create an invite.'); }
+    finally { setPending(false); }
+  }
+
+  async function join(event) {
+    event.preventDefault(); setPending(true); setMessage('');
+    try { await joinPartnerSpace(new FormData(event.currentTarget).get('code')); window.location.reload(); }
+    catch (error) { setMessage(error.message || 'Could not join that shared space.'); setPending(false); }
+  }
+
+  return <div className={styles.backdrop} role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><section ref={dialogRef} className={styles.dialog} role="dialog" aria-modal="true" aria-labelledby="share-dialog-title"><button className={styles.dialogClose} type="button" onClick={onClose} aria-label="Close dialog"><Icon name="close" /></button><span className={styles.eyebrow}>Shared through apps-db</span><h2 id="share-dialog-title">Plan as a couple</h2><p>{workspace.memberCount > 1 ? 'Your partner is connected. Every change is saved to the same shared space.' : 'Invite your partner with a private code, or enter the code they sent you.'}</p>{workspace.memberCount < 2 && workspace.role === 'owner' && <div className={styles.invitePanel}>{invite ? <><span>Your invite code</span><strong>{invite.code}</strong><button type="button" onClick={async () => { await navigator.clipboard.writeText(invite.code); setMessage('Invite code copied.'); }}>Copy code</button><small>Expires in 7 days and can be used once.</small></> : <button type="button" disabled={pending} onClick={createInvite}>{pending ? 'Creating…' : 'Create invite code'}</button>}</div>}{workspace.memberCount < 2 && <form className={styles.joinForm} onSubmit={join}><label>Join your partner<input ref={inputRef} name="code" minLength="6" maxLength="6" autoComplete="off" placeholder="ABC123" required /></label><button type="submit" disabled={pending}>{pending ? 'Joining…' : 'Join space'}</button></form>}<p className={styles.dialogMessage} role="status">{message}</p></section></div>;
+}
+
+export default function CouplePlannerDashboard({ userName, today, initialData = {}, hasSavedData = false, workspace }) {
+  const [active, setActive] = useState('calendar');
+  const [data, setData] = useState(() => ({ ...defaultData(today, userName), ...initialData }));
+  const [cursor, setCursor] = useState(() => new Date(`${today}T12:00:00`));
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [syncState, setSyncState] = useState('saved');
+
+  useEffect(() => {
+    try { const saved = hasSavedData ? null : JSON.parse(window.localStorage.getItem(STORAGE_KEY)); if (saved && typeof saved === 'object') setData((current) => ({ ...current, ...saved })); } catch { /* Keep defaults when storage is unavailable or malformed. */ }
     setReady(true);
-  }, []);
-  useEffect(() => { if (ready) window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }, [data, ready]);
+  }, [hasSavedData]);
+  useEffect(() => {
+    if (!ready) return;
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    setSyncState('saving');
+    const timeout = window.setTimeout(async () => {
+      try { await saveCouplePlannerData(data); setSyncState('saved'); }
+      catch { setSyncState('error'); }
+    }, 700);
+    return () => window.clearTimeout(timeout);
+  }, [data, ready]);
 
   const upcomingCount = useMemo(() => data.calendar.filter((item) => item.date >= today).length, [data.calendar, today]);
   const pendingCount = useMemo(() => data.tasks.filter((item) => !item.done).length, [data.tasks]);
@@ -205,13 +263,14 @@ export default function CouplePlannerDashboard({ userName, today }) {
 
   return (
     <div className={styles.app}>
-      <aside className={styles.sidebar}><div className={styles.brand}><span><Icon name="heart" size={18} /></span><div><strong>Couple Planner</strong><small>Our shared space</small></div></div><nav aria-label="Couple Planner sections">{sections.map((section) => <button className={active === section.id ? styles.activeNav : ''} type="button" key={section.id} onClick={() => setActive(section.id)}><Icon name={section.icon} /><span>{section.label}</span>{section.id === 'tasks' && pendingCount > 0 && <small>{pendingCount}</small>}</button>)}</nav><div className={styles.sidebarFooter}><div className={styles.avatars}><span>{userName.charAt(0).toUpperCase()}</span><span>+</span></div><div><strong>{userName}</strong><small>Invite your partner</small></div></div></aside>
+      <aside className={styles.sidebar}><div className={styles.brand}><span><Icon name="heart" size={18} /></span><div><strong>Couple Planner</strong><small>Our shared space</small></div></div><nav aria-label="Couple Planner sections">{sections.map((section) => <button className={active === section.id ? styles.activeNav : ''} type="button" key={section.id} onClick={() => setActive(section.id)}><Icon name={section.icon} /><span>{section.label}</span>{section.id === 'tasks' && pendingCount > 0 && <small>{pendingCount}</small>}</button>)}</nav><button className={styles.sidebarFooter} type="button" onClick={() => setShareOpen(true)}><div className={styles.avatars}><span>{userName.charAt(0).toUpperCase()}</span><span>{workspace.memberCount > 1 ? '✓' : '+'}</span></div><div><strong>{userName}</strong><small>{workspace.memberCount > 1 ? 'Partner connected' : 'Invite your partner'}</small></div></button></aside>
       <div className={styles.workspace}>
-        <header className={styles.mobileHeader}><div className={styles.brand}><span><Icon name="heart" size={17} /></span><div><strong>Couple Planner</strong><small>Our shared space</small></div></div><div className={styles.avatars}><span>{userName.charAt(0).toUpperCase()}</span></div></header>
-        <main className={styles.content}><div className={styles.pageHeader}><div><span className={styles.eyebrow}><Icon name="users" size={14} /> Made for two</span><h1>{meta.title}</h1><p>{meta.copy}</p></div><button className={styles.primaryButton} type="button" onClick={() => setDialogOpen(true)}><Icon name="plus" size={18} />{meta.action}</button></div><div className={styles.summary} aria-label="Planner summary"><span><strong>{upcomingCount}</strong> upcoming plans</span><i /><span><strong>{pendingCount}</strong> open tasks</span><i /><span><strong>{data.dates.length + data.trips.length}</strong> saved adventures</span></div>{active === 'calendar' && <Calendar items={data.calendar} cursor={cursor} setCursor={setCursor} today={today} />}{active === 'tasks' && <TaskList items={data.tasks} onToggle={toggleTask} onDelete={deleteItem} />}{!['calendar', 'tasks'].includes(active) && <Collection items={data[active]} section={active} onDelete={deleteItem} />}</main>
+        <header className={styles.mobileHeader}><div className={styles.brand}><span><Icon name="heart" size={17} /></span><div><strong>Couple Planner</strong><small>Our shared space</small></div></div><button className={styles.avatars} type="button" onClick={() => setShareOpen(true)} aria-label="Manage shared space"><span>{userName.charAt(0).toUpperCase()}</span></button></header>
+        <main className={styles.content}><div className={styles.pageHeader}><div><span className={styles.eyebrow}><Icon name="users" size={14} /> Made for two · <span aria-live="polite">{syncState === 'saving' ? 'Saving…' : syncState === 'error' ? 'Sync failed' : 'Saved to cloud'}</span></span><h1>{meta.title}</h1><p>{meta.copy}</p></div><button className={styles.primaryButton} type="button" onClick={() => setDialogOpen(true)}><Icon name="plus" size={18} />{meta.action}</button></div><div className={styles.summary} aria-label="Planner summary"><span><strong>{upcomingCount}</strong> upcoming plans</span><i /><span><strong>{pendingCount}</strong> open tasks</span><i /><span><strong>{data.dates.length + data.trips.length}</strong> saved adventures</span></div>{active === 'calendar' && <Calendar items={data.calendar} cursor={cursor} setCursor={setCursor} today={today} />}{active === 'tasks' && <TaskList items={data.tasks} onToggle={toggleTask} onDelete={deleteItem} />}{!['calendar', 'tasks'].includes(active) && <Collection items={data[active]} section={active} onDelete={deleteItem} />}</main>
         <nav className={styles.mobileNav} aria-label="Couple Planner mobile sections">{sections.map((section) => <button className={active === section.id ? styles.activeMobileNav : ''} type="button" key={section.id} onClick={() => setActive(section.id)}><Icon name={section.icon} size={19} /><span>{section.label === 'Entertainment' ? 'Media' : section.label}</span></button>)}</nav>
       </div>
       {dialogOpen && <AddDialog section={active} onClose={() => setDialogOpen(false)} onSubmit={addItem} />}
+      {shareOpen && <ShareDialog workspace={workspace} onClose={() => setShareOpen(false)} />}
     </div>
   );
 }

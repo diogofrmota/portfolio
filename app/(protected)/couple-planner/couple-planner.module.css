@@ -28,7 +28,8 @@
 .sidebar nav button.activeNav { background: #ffebe6; color: var(--red-dark); }
 .sidebar nav button small { min-width: 21px; padding: 3px 6px; border-radius: 99px; background: #f0dfdb; font-size: .61rem; text-align: center; }
 .sidebar nav button.activeNav small { background: var(--red); color: white; }
-.sidebarFooter { display: flex; align-items: center; gap: 10px; margin-top: auto; padding: 17px 8px 2px; border-top: 1px solid var(--line); }
+.sidebarFooter { width: 100%; display: flex; align-items: center; gap: 10px; margin-top: auto; padding: 17px 8px 2px; border-top: 1px solid var(--line); color: inherit; text-align: left; }
+.sidebarFooter:hover small { color: var(--red); }
 .sidebarFooter > div:last-child { display: flex; min-width: 0; flex-direction: column; }
 .sidebarFooter strong { max-width: 110px; overflow: hidden; font-size: .72rem; text-overflow: ellipsis; white-space: nowrap; }
 .sidebarFooter small { margin-top: 2px; color: var(--red-dark); font-size: .59rem; }
@@ -115,6 +116,15 @@
 .dialog label { display: grid; gap: 7px; color: #614d47; font-size: .65rem; font-weight: 800; }
 .dialog input, .dialog textarea { width: 100%; min-height: 44px; padding: 11px 12px; border: 1px solid #d9cbc6; border-radius: 10px; outline: none; background: #fff; color: var(--ink); font-size: .75rem; resize: vertical; }
 .dialog input:focus, .dialog textarea:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(230, 59, 46, .12); }
+.invitePanel { display: grid; justify-items: start; gap: 9px; margin-top: 22px; padding: 18px; border-radius: 14px; background: #fff0ec; }
+.invitePanel span, .invitePanel small { color: var(--muted); font-size: .62rem; }
+.invitePanel strong { color: var(--red-dark); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 1.7rem; letter-spacing: .18em; }
+.invitePanel button, .joinForm button { min-height: 40px; padding: 0 14px; border-radius: 9px; background: var(--red); color: white; font-size: .67rem; font-weight: 800; }
+.invitePanel button:hover, .joinForm button:hover { background: var(--red-dark); }
+.invitePanel button:disabled, .joinForm button:disabled { cursor: wait; opacity: .6; }
+.joinForm { grid-template-columns: 1fr auto; align-items: end; }
+.joinForm input { text-transform: uppercase; letter-spacing: .12em; }
+.dialogMessage { min-height: 1.2em; margin-top: 12px; color: var(--red-dark); font-size: .65rem; }
 .formActions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 7px; }
 .formActions button { min-height: 43px; padding: 0 15px; border: 1px solid var(--line); border-radius: 10px; color: #66534e; font-size: .69rem; font-weight: 800; }
 .formActions button:last-child { border-color: var(--red); background: var(--red); color: white; }
@@ -157,6 +167,7 @@
   .collectionCard { min-height: 225px; }
   .dialog { padding: 26px 20px 20px; border-radius: 18px; }
   .formActions { display: grid; grid-template-columns: 1fr 1.4fr; }
+  .joinForm { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 420px) {

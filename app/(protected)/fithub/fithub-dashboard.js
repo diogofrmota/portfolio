@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { saveFithubState } from './actions';
 import styles from './fithub.module.css';
 
 const defaultGoals = [
@@ -125,16 +126,17 @@ function ActivityGrid({ activity, today }) {
   );
 }
 
-export default function FithubDashboard({ today }) {
-  const [completed, setCompleted] = useState(['water']);
-  const [activity, setActivity] = useState(() => buildActivity(today));
-  const [workouts, setWorkouts] = useState(defaultWorkouts);
+export default function FithubDashboard({ today, initialState = {}, hasSavedState = false }) {
+  const [completed, setCompleted] = useState(() => initialState.completed ?? ['water']);
+  const [activity, setActivity] = useState(() => initialState.activity ?? buildActivity(today));
+  const [workouts, setWorkouts] = useState(() => initialState.workouts ?? defaultWorkouts);
   const [showWorkoutForm, setShowWorkoutForm] = useState(false);
   const [ready, setReady] = useState(false);
+  const [syncState, setSyncState] = useState('saved');
 
   useEffect(() => {
     try {
-      const saved = JSON.parse(window.localStorage.getItem(storageKey));
+      const saved = hasSavedState ? null : JSON.parse(window.localStorage.getItem(storageKey));
       if (saved?.activity) {
         setActivity(saved.activity);
         const hasGymVisit = saved.activity.some((day) => day.date === today && day.level > 0);
@@ -148,11 +150,21 @@ export default function FithubDashboard({ today }) {
       // Keep the useful defaults when storage is unavailable or malformed.
     }
     setReady(true);
-  }, []);
+  }, [hasSavedState, today]);
 
   useEffect(() => {
     if (!ready) return;
     window.localStorage.setItem(storageKey, JSON.stringify({ completed, activity, workouts }));
+    setSyncState('saving');
+    const timeout = window.setTimeout(async () => {
+      try {
+        await saveFithubState({ completed, activity, workouts });
+        setSyncState('saved');
+      } catch {
+        setSyncState('error');
+      }
+    }, 700);
+    return () => window.clearTimeout(timeout);
   }, [activity, completed, ready, workouts]);
 
   const gymLogged = activity.some((day) => day.date === today && day.level > 0);
@@ -189,7 +201,7 @@ export default function FithubDashboard({ today }) {
       <div className={styles.container}>
         <section className={styles.hero}>
           <div>
-            <div className={styles.eyebrow}><span className={styles.pulse} /> Fithub dashboard</div>
+            <div className={styles.eyebrow}><span className={styles.pulse} /> Fithub dashboard · <span aria-live="polite">{syncState === 'saving' ? 'Saving…' : syncState === 'error' ? 'Sync failed' : 'Saved to cloud'}</span></div>
             <h1>Build your streak.<br /><span>Own your progress.</span></h1>
             <p>Small actions, repeated daily. Keep your training, habits, and plan together.</p>
           </div>
