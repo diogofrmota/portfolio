@@ -1,0 +1,718 @@
+.app {
+  --ink: #142019;
+  --muted: #66716a;
+  --line: #dfe6e1;
+  --green: #2ea44f;
+  --green-dark: #17652e;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at 91% 2%, rgba(183, 244, 109, 0.22), transparent 23rem),
+    #f4f7f5;
+  color: var(--ink);
+}
+
+.container {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 64px 0 80px;
+}
+
+.hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 48px;
+  margin-bottom: 52px;
+}
+
+.eyebrow,
+.kicker {
+  color: #3f604a;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #39bf61;
+  box-shadow: 0 0 0 5px rgba(57, 191, 97, 0.13);
+}
+
+.hero h1 {
+  max-width: 720px;
+  margin: 0;
+  font-size: clamp(2.7rem, 6vw, 5.3rem);
+  font-weight: 820;
+  letter-spacing: -0.065em;
+  line-height: 0.94;
+}
+
+.hero h1 span {
+  color: var(--green);
+}
+
+.hero p {
+  max-width: 560px;
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+button.logButton,
+button.addButton {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 48px;
+  padding: 0 19px;
+  border: 0;
+  border-radius: 14px;
+  background: #173c25;
+  color: #fff;
+  box-shadow: 0 9px 24px rgba(23, 60, 37, 0.16);
+  font-size: 0.84rem;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+button.logButton:hover,
+button.addButton:hover {
+  background: #205430;
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+button.logButton.logged {
+  background: var(--green);
+}
+
+.activityCard,
+.goalsCard,
+.todayCard {
+  border: 1px solid rgba(25, 48, 33, 0.1);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 18px 50px rgba(36, 58, 43, 0.06);
+}
+
+.activityCard {
+  padding: 30px;
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.sectionHeading h2,
+.todayCard h2 {
+  margin: 5px 0 0;
+  font-size: 1.55rem;
+  letter-spacing: -0.035em;
+}
+
+.sectionHeading > div > p {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.statRow {
+  display: flex;
+  gap: 30px;
+}
+
+.statRow > div {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: baseline;
+  column-gap: 6px;
+}
+
+.statRow strong {
+  font-size: 1.15rem;
+}
+
+.statRow span {
+  color: var(--muted);
+  font-size: 0.7rem;
+}
+
+.statRow .streak {
+  grid-template-columns: auto auto auto;
+  color: #f08c2e;
+}
+
+.chartScroll {
+  margin-top: 34px;
+  overflow-x: auto;
+  padding: 0 0 7px;
+  scrollbar-color: #cbd6ce transparent;
+  scrollbar-width: thin;
+}
+
+.chart {
+  width: max-content;
+  min-width: 100%;
+}
+
+.months {
+  display: grid;
+  grid-template-columns: repeat(53, 14px);
+  gap: 4px;
+  margin-left: 36px;
+  min-height: 20px;
+  color: #869189;
+  font-size: 0.62rem;
+}
+
+.months span {
+  white-space: nowrap;
+}
+
+.chartBody {
+  display: flex;
+  gap: 8px;
+}
+
+.dayLabels,
+.week {
+  display: grid;
+  grid-template-rows: repeat(7, 14px);
+  gap: 4px;
+}
+
+.dayLabels {
+  width: 28px;
+  flex: 0 0 28px;
+  color: #869189;
+  font-size: 0.59rem;
+  line-height: 14px;
+}
+
+.weeks {
+  display: flex;
+  gap: 4px;
+}
+
+.activityDay {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  border-radius: 3px;
+  background: #ebefec;
+}
+
+.level1 { background: #cef3d8; }
+.level2 { background: #81d896; }
+.level3 { background: #39b95d; }
+.level4 { background: #187638; }
+
+.today {
+  outline: 2px solid #15251a;
+  outline-offset: 1px;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  margin-top: 14px;
+  color: #869189;
+  font-size: 0.64rem;
+}
+
+.legend .activityDay {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(280px, 0.75fr);
+  gap: 22px;
+  margin-top: 22px;
+}
+
+.goalsCard {
+  padding: 28px;
+}
+
+.progressLabel {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  border-radius: 50%;
+  background: #edf8f0;
+  color: var(--green-dark);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.progressTrack {
+  height: 5px;
+  margin: 22px 0 12px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: #edf1ee;
+}
+
+.progressTrack span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--green);
+  transition: width 240ms ease;
+}
+
+.goalList {
+  display: grid;
+}
+
+button.goal {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 42px 1fr 24px;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 2px;
+  border-bottom: 1px solid #edf0ee;
+  color: var(--ink);
+  text-align: left;
+  text-decoration: none;
+}
+
+button.goal:hover {
+  opacity: 1;
+}
+
+.goalIcon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: #f0f5f1;
+  color: #42614c;
+}
+
+.goalCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.goalCopy strong {
+  font-size: 0.86rem;
+}
+
+.goalCopy small {
+  color: var(--muted);
+  font-size: 0.7rem;
+}
+
+.checkbox {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid #c9d2cc;
+  border-radius: 7px;
+  color: #fff;
+}
+
+.goalDone .checkbox {
+  border-color: var(--green);
+  background: var(--green);
+}
+
+.goalDone .goalCopy strong {
+  color: #809087;
+  text-decoration: line-through;
+}
+
+.goalFooter {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding-top: 18px;
+  color: var(--muted);
+  font-size: 0.67rem;
+}
+
+.goalFooter span:first-child {
+  color: var(--green-dark);
+  font-weight: 800;
+}
+
+.todayCard {
+  position: relative;
+  overflow: hidden;
+  padding: 28px;
+  background: #173c25;
+  color: #fff;
+}
+
+.todayCard::after {
+  position: absolute;
+  right: -60px;
+  bottom: -80px;
+  width: 230px;
+  height: 230px;
+  border: 46px solid rgba(176, 241, 104, 0.09);
+  border-radius: 50%;
+  content: '';
+}
+
+.todayCard .kicker {
+  color: #a8cdb3;
+}
+
+.todayIcon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  margin-top: 36px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #b7f46d;
+}
+
+.todayDay {
+  margin-top: 22px;
+  color: #b7f46d;
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.todayCard > p:not(.todayDay) {
+  position: relative;
+  z-index: 1;
+  margin-top: 8px;
+  color: #b8cabe;
+  font-size: 0.75rem;
+}
+
+.todayCard > button {
+  position: absolute;
+  z-index: 2;
+  right: 28px;
+  bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.planSection {
+  padding-top: 64px;
+  scroll-margin-top: 90px;
+}
+
+.workoutForm {
+  display: grid;
+  grid-template-columns: 0.7fr 1fr 1.7fr auto;
+  align-items: end;
+  gap: 14px;
+  margin-top: 26px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 12px 34px rgba(36, 58, 43, 0.05);
+}
+
+.workoutForm label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  color: #526158;
+  font-size: 0.68rem;
+  font-weight: 750;
+}
+
+.workoutForm label span {
+  color: #929c95;
+  font-weight: 500;
+}
+
+.workoutForm input,
+.workoutForm select,
+.workoutForm textarea {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid #d7dfda;
+  border-radius: 10px;
+  outline: none;
+  background: #fbfdfb;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.78rem;
+  resize: vertical;
+}
+
+.workoutForm input:focus,
+.workoutForm select:focus,
+.workoutForm textarea:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(46, 164, 79, 0.13);
+}
+
+.workoutForm > button {
+  min-height: 42px;
+  padding: 0 17px;
+  border-radius: 10px;
+  background: var(--green);
+  color: #fff;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.workoutGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 26px;
+}
+
+.workoutCard {
+  min-height: 290px;
+  padding: 23px;
+  border-radius: 20px;
+  color: #183221;
+}
+
+.workoutCard.lime { background: #dcf8b9; }
+.workoutCard.mint { background: #c8efda; }
+.workoutCard.forest { background: #204a2d; color: #fff; }
+
+.workoutTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 42px;
+}
+
+.workoutTop > span {
+  font-size: 0.7rem;
+  font-weight: 850;
+  opacity: 0.6;
+}
+
+.workoutTop button {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: 9px;
+  color: currentColor;
+  text-decoration: none;
+  opacity: 0.55;
+}
+
+.workoutTop button:hover {
+  background: rgba(0, 0, 0, 0.08);
+  opacity: 1;
+}
+
+.workoutCard > p {
+  font-size: 0.7rem;
+  font-weight: 800;
+  opacity: 0.65;
+  text-transform: uppercase;
+}
+
+.workoutCard h3 {
+  margin: 7px 0 22px;
+  font-size: 1.35rem;
+  letter-spacing: -0.035em;
+}
+
+.workoutCard ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.workoutCard li {
+  padding-top: 10px;
+  border-top: 1px solid currentColor;
+  font-size: 0.72rem;
+  opacity: 0.72;
+}
+
+.emptyPlan {
+  grid-column: 1 / -1;
+  padding: 54px 24px;
+  border: 1px dashed #bdc9c1;
+  border-radius: 20px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.emptyPlan h3 {
+  margin: 13px 0 6px;
+  color: var(--ink);
+}
+
+.emptyPlan p {
+  font-size: 0.8rem;
+}
+
+.icon {
+  flex: 0 0 auto;
+}
+
+button.logButton:focus-visible,
+button.addButton:focus-visible,
+button.goal:focus-visible,
+.todayCard button:focus-visible,
+.workoutTop button:focus-visible,
+.workoutForm button:focus-visible {
+  outline: 3px solid rgba(46, 164, 79, 0.35);
+  outline-offset: 3px;
+}
+
+@media (max-width: 920px) {
+  .container {
+    width: min(calc(100% - 32px), 760px);
+    padding-top: 44px;
+  }
+
+  .hero {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .todayCard {
+    min-height: 280px;
+  }
+
+  .workoutGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .workoutForm {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .exerciseField {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 620px) {
+  .container {
+    width: min(calc(100% - 24px), 520px);
+    padding: 34px 0 56px;
+  }
+
+  .hero {
+    margin-bottom: 34px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.45rem, 14vw, 4rem);
+  }
+
+  button.logButton {
+    width: 100%;
+  }
+
+  .activityCard,
+  .goalsCard,
+  .todayCard {
+    padding: 21px;
+    border-radius: 18px;
+  }
+
+  .activityCard .sectionHeading {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .statRow {
+    width: 100%;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .statRow > div,
+  .statRow .streak {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .statRow .streak .icon {
+    display: none;
+  }
+
+  .planSection {
+    padding-top: 48px;
+  }
+
+  .planSection > .sectionHeading {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .workoutGrid,
+  .workoutForm {
+    grid-template-columns: 1fr;
+  }
+
+  .exerciseField {
+    grid-column: auto;
+  }
+
+  .workoutCard {
+    min-height: 270px;
+  }
+
+  .goalFooter span:last-child {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progressTrack span,
+  button.logButton,
+  button.addButton {
+    transition: none;
+  }
+}
