@@ -14,5 +14,5 @@ export default async function Fithub() {
   const today = new Date().toISOString().slice(0, 10);
   const state = await getFithubState(session.user);
 
-  return <FithubDashboard today={today} initialState={state.data} hasSavedState={state.hasSavedState} />;
+  return <FithubDashboard today={today} initialState={state.data} />;
 }

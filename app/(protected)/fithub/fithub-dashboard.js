@@ -1,42 +1,11 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { saveFithubState } from './actions';
 import styles from './fithub.module.css';
 
-const defaultGoals = [
-  { id: 'gym', label: 'Go to the gym', detail: 'Strength session', icon: 'dumbbell' },
-  { id: 'run', label: 'Run 5 km', detail: 'Outdoor or treadmill', icon: 'run' },
-  { id: 'water', label: 'Drink 4 liters of water', detail: '8 of 8 glasses', icon: 'water' },
-  { id: 'supplements', label: 'Take supplements', detail: 'Creatine, protein & omega 3', icon: 'supplement' },
-];
-
-const defaultWorkouts = [
-  {
-    id: 'push',
-    day: 'Monday',
-    title: 'Push day',
-    exercises: ['Bench press · 4 × 8', 'Overhead press · 3 × 10', 'Cable fly · 3 × 12'],
-    tone: 'lime',
-  },
-  {
-    id: 'lower',
-    day: 'Wednesday',
-    title: 'Lower body',
-    exercises: ['Back squat · 4 × 6', 'Romanian deadlift · 3 × 8', 'Leg press · 3 × 12'],
-    tone: 'mint',
-  },
-  {
-    id: 'pull',
-    day: 'Friday',
-    title: 'Pull day',
-    exercises: ['Pull ups · 4 × 6', 'Barbell row · 4 × 8', 'Face pulls · 3 × 15'],
-    tone: 'forest',
-  },
-];
-
-const storageKey = 'fithub-dashboard-v1';
 const dayNames = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
+const workoutDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 function Icon({ name, size = 20 }) {
   const paths = {
@@ -50,6 +19,7 @@ function Icon({ name, size = 20 }) {
     arrow: <><path d="M5 12h14M14 7l5 5-5 5" /></>,
     calendar: <><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 10h18" /></>,
     trash: <><path d="M4 7h16M9 7V4h6v3M7 7l1 14h8l1-14" /></>,
+    close: <path d="m6 6 12 12M18 6 6 18" />,
   };
 
   return (
@@ -62,20 +32,59 @@ function Icon({ name, size = 20 }) {
 function buildActivity(today) {
   const end = new Date(`${today}T12:00:00Z`);
   const start = new Date(end);
-  start.setUTCDate(start.getUTCDate() - 363 - start.getUTCDay());
+  start.setUTCDate(end.getUTCDate() - 364 - ((end.getUTCDay() + 6) % 7));
 
   return Array.from({ length: 371 }, (_, index) => {
     const date = new Date(start);
     date.setUTCDate(start.getUTCDate() + index);
     const dateKey = date.toISOString().slice(0, 10);
-    const seed = (index * 17 + date.getUTCMonth() * 11) % 29;
-    const isFuture = date > end;
-    const level = isFuture || dateKey === today || seed < 10 ? 0 : seed < 17 ? 1 : seed < 23 ? 2 : seed < 27 ? 3 : 4;
-    return { date: dateKey, level };
+    return { date: dateKey, level: 0 };
   });
 }
 
-function ActivityGrid({ activity, today }) {
+function mergeActivity(savedActivity, today) {
+  const levels = new Map(Array.isArray(savedActivity) ? savedActivity.map((day) => [day.date, day.level]) : []);
+  return buildActivity(today).map((day) => ({ ...day, level: Math.max(0, Math.min(4, Number(levels.get(day.date)) || 0)) }));
+}
+
+function calculateStreaks(activity, today) {
+  const visits = new Set(activity.filter((day) => day.level > 0).map((day) => day.date));
+  const ordered = [...visits].sort();
+  let best = 0;
+  let run = 0;
+  let previous = null;
+  for (const date of ordered) {
+    const current = new Date(`${date}T12:00:00Z`);
+    const consecutive = previous && (current - previous) / 86400000 === 1;
+    run = consecutive ? run + 1 : 1;
+    best = Math.max(best, run);
+    previous = current;
+  }
+  const cursor = new Date(`${today}T12:00:00Z`);
+  let current = 0;
+  if (!visits.has(today)) cursor.setUTCDate(cursor.getUTCDate() - 1);
+  while (visits.has(cursor.toISOString().slice(0, 10))) {
+    current += 1;
+    cursor.setUTCDate(cursor.getUTCDate() - 1);
+  }
+  return { current, best };
+}
+
+function getNextWorkout(workouts, today) {
+  const todayIndex = new Date(`${today}T12:00:00Z`).getUTCDay();
+  const next = workouts
+    .map((workout, index) => {
+      const dayIndex = workoutDays.indexOf(workout.day);
+      return { workout, index, distance: dayIndex < 0 ? 8 : (dayIndex - todayIndex + 7) % 7 };
+    })
+    .sort((a, b) => a.distance - b.distance || a.index - b.index)[0];
+
+  if (!next || next.distance > 7) return null;
+  const timing = next.distance === 0 ? 'Today' : next.distance === 1 ? 'Tomorrow' : next.workout.day;
+  return { ...next.workout, timing };
+}
+
+function ActivityGrid({ activity, today, visitCount }) {
   const weeks = useMemo(() => {
     const grouped = [];
     for (let index = 0; index < activity.length; index += 7) grouped.push(activity.slice(index, index + 7));
@@ -96,8 +105,8 @@ function ActivityGrid({ activity, today }) {
   }, [weeks]);
 
   return (
-    <div className={styles.chartScroll}>
-      <div className={styles.chart}>
+    <div className={styles.chartScroll} role="img" aria-label={`${visitCount} gym ${visitCount === 1 ? 'visit' : 'visits'} logged over the last year`}>
+      <div className={styles.chart} aria-hidden="true">
         <div className={styles.months} aria-hidden="true">
           {months.map((month) => <span key={`${month.label}-${month.index}`} style={{ gridColumnStart: month.index + 1 }}>{month.label}</span>)}
         </div>
@@ -105,16 +114,14 @@ function ActivityGrid({ activity, today }) {
           <div className={styles.dayLabels} aria-hidden="true">
             {dayNames.map((day, index) => <span key={`${day}-${index}`}>{day}</span>)}
           </div>
-          <div className={styles.weeks} role="grid" aria-label="Gym activity over the last year">
-            {weeks.map((week, weekIndex) => (
-              <div className={styles.week} role="row" key={week[0].date}>
+          <div className={styles.weeks}>
+            {weeks.map((week) => (
+              <div className={styles.week} key={week[0].date}>
                 {week.map((day) => (
                   <span
                     className={`${styles.activityDay} ${styles[`level${day.level}`]} ${day.date === today ? styles.today : ''}`}
                     key={day.date}
-                    role="gridcell"
                     title={`${day.date}: ${day.level ? 'gym visit logged' : 'no gym visit'}`}
-                    aria-label={`${day.date}: ${day.level ? 'gym visit logged' : 'no gym visit'}`}
                   />
                 ))}
               </div>
@@ -126,50 +133,63 @@ function ActivityGrid({ activity, today }) {
   );
 }
 
-export default function FithubDashboard({ today, initialState = {}, hasSavedState = false }) {
-  const [completed, setCompleted] = useState(() => initialState.completed ?? ['water']);
-  const [activity, setActivity] = useState(() => initialState.activity ?? buildActivity(today));
-  const [workouts, setWorkouts] = useState(() => initialState.workouts ?? defaultWorkouts);
+export default function FithubDashboard({ today, initialState = {} }) {
+  const [goals, setGoals] = useState(() => initialState.goals ?? []);
+  const [completed, setCompleted] = useState(() => initialState.completedDate === today ? initialState.completed ?? [] : []);
+  const [activity, setActivity] = useState(() => mergeActivity(initialState.activity, today));
+  const [workouts, setWorkouts] = useState(() => initialState.workouts ?? []);
+  const [showGoalForm, setShowGoalForm] = useState(false);
   const [showWorkoutForm, setShowWorkoutForm] = useState(false);
-  const [ready, setReady] = useState(false);
   const [syncState, setSyncState] = useState('saved');
+  const [saveAttempt, setSaveAttempt] = useState(0);
+  const [deletedItem, setDeletedItem] = useState(null);
+  const firstSave = useRef(true);
+  const saveQueue = useRef(Promise.resolve());
+  const saveRevision = useRef(0);
+  const goalInputRef = useRef(null);
+  const workoutTitleRef = useRef(null);
 
   useEffect(() => {
-    try {
-      const saved = hasSavedState ? null : JSON.parse(window.localStorage.getItem(storageKey));
-      if (saved?.activity) {
-        setActivity(saved.activity);
-        const hasGymVisit = saved.activity.some((day) => day.date === today && day.level > 0);
-        const savedGoals = saved.completed ?? [];
-        setCompleted(hasGymVisit ? [...new Set([...savedGoals, 'gym'])] : savedGoals.filter((id) => id !== 'gym'));
-      } else if (saved?.completed) {
-        setCompleted(saved.completed.filter((id) => id !== 'gym'));
-      }
-      if (saved?.workouts) setWorkouts(saved.workouts);
-    } catch {
-      // Keep the useful defaults when storage is unavailable or malformed.
+    if (firstSave.current) {
+      firstSave.current = false;
+      return;
     }
-    setReady(true);
-  }, [hasSavedState, today]);
-
-  useEffect(() => {
-    if (!ready) return;
-    window.localStorage.setItem(storageKey, JSON.stringify({ completed, activity, workouts }));
+    const revision = ++saveRevision.current;
+    const nextState = { goals, completed, completedDate: today, activity, workouts };
     setSyncState('saving');
-    const timeout = window.setTimeout(async () => {
-      try {
-        await saveFithubState({ completed, activity, workouts });
-        setSyncState('saved');
-      } catch {
-        setSyncState('error');
-      }
+    const timeout = window.setTimeout(() => {
+      const request = saveQueue.current.catch(() => undefined).then(() => saveFithubState(nextState));
+      saveQueue.current = request;
+      request.then(() => {
+        if (revision === saveRevision.current) setSyncState('saved');
+      }).catch(() => {
+        if (revision === saveRevision.current) setSyncState('error');
+      });
     }, 700);
     return () => window.clearTimeout(timeout);
-  }, [activity, completed, ready, workouts]);
+  }, [activity, completed, goals, saveAttempt, today, workouts]);
+
+  useEffect(() => {
+    if (showGoalForm) goalInputRef.current?.focus();
+  }, [showGoalForm]);
+
+  useEffect(() => {
+    if (showWorkoutForm) workoutTitleRef.current?.focus();
+  }, [showWorkoutForm]);
+
+  useEffect(() => {
+    if (!deletedItem) return undefined;
+    const timeout = window.setTimeout(() => setDeletedItem(null), 10000);
+    return () => window.clearTimeout(timeout);
+  }, [deletedItem]);
 
   const gymLogged = activity.some((day) => day.date === today && day.level > 0);
-  const completion = Math.round((completed.length / defaultGoals.length) * 100);
+  const completedGoalCount = goals.filter((goal) => completed.includes(goal.id)).length;
+  const completion = goals.length ? Math.round((completedGoalCount / goals.length) * 100) : 0;
   const visitCount = activity.filter((day) => day.level > 0).length;
+  const streaks = calculateStreaks(activity, today);
+  const orderedWorkouts = useMemo(() => [...workouts].sort((a, b) => workoutDays.indexOf(a.day) - workoutDays.indexOf(b.day)), [workouts]);
+  const nextWorkout = useMemo(() => getNextWorkout(workouts, today), [today, workouts]);
 
   function toggleGoal(goalId) {
     setCompleted((current) => current.includes(goalId) ? current.filter((id) => id !== goalId) : [...current, goalId]);
@@ -177,23 +197,76 @@ export default function FithubDashboard({ today, initialState = {}, hasSavedStat
 
   function toggleGymVisit() {
     setActivity((current) => current.map((day) => day.date === today ? { ...day, level: day.level ? 0 : 4 } : day));
-    setCompleted((current) => gymLogged ? current.filter((id) => id !== 'gym') : [...new Set([...current, 'gym'])]);
+  }
+
+  function addGoal(event) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const goal = { id: crypto.randomUUID(), label: String(form.get('label') || '').trim(), detail: String(form.get('detail') || '').trim(), icon: 'check' };
+    if (!goal.label) return;
+    setGoals((current) => [...current, goal]);
+    setShowGoalForm(false);
+    event.currentTarget.reset();
+  }
+
+  function deleteGoal(goalId) {
+    const index = goals.findIndex((goal) => goal.id === goalId);
+    const item = goals[index];
+    if (!item) return;
+    setDeletedItem({ kind: 'goal', item, index, wasCompleted: completed.includes(goalId) });
+    setGoals((current) => current.filter((goal) => goal.id !== goalId));
+    setCompleted((current) => current.filter((id) => id !== goalId));
   }
 
   function addWorkout(event) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const exercises = data.get('exercises').split('\n').map((item) => item.trim()).filter(Boolean);
+    const exercises = String(data.get('exercises') || '').split('\n').map((item) => item.trim()).filter(Boolean).slice(0, 30);
     const workout = {
-      id: `${Date.now()}`,
-      day: data.get('day'),
-      title: data.get('title').trim(),
+      id: crypto.randomUUID(),
+      day: String(data.get('day') || ''),
+      title: String(data.get('title') || '').trim(),
       exercises,
       tone: ['lime', 'mint', 'forest'][workouts.length % 3],
     };
+    if (!workout.title || !workout.day || !workout.exercises.length) return;
     setWorkouts((current) => [...current, workout]);
     setShowWorkoutForm(false);
     event.currentTarget.reset();
+  }
+
+  function deleteWorkout(workoutId) {
+    const index = workouts.findIndex((workout) => workout.id === workoutId);
+    const item = workouts[index];
+    if (!item) return;
+    setDeletedItem({ kind: 'workout', item, index });
+    setWorkouts((current) => current.filter((workout) => workout.id !== workoutId));
+  }
+
+  function undoDelete() {
+    if (!deletedItem) return;
+    if (deletedItem.kind === 'goal') {
+      setGoals((current) => {
+        if (current.some((goal) => goal.id === deletedItem.item.id)) return current;
+        const next = [...current];
+        next.splice(Math.min(deletedItem.index, next.length), 0, deletedItem.item);
+        return next;
+      });
+      if (deletedItem.wasCompleted) setCompleted((current) => [...new Set([...current, deletedItem.item.id])]);
+    } else {
+      setWorkouts((current) => {
+        if (current.some((workout) => workout.id === deletedItem.item.id)) return current;
+        const next = [...current];
+        next.splice(Math.min(deletedItem.index, next.length), 0, deletedItem.item);
+        return next;
+      });
+    }
+    setDeletedItem(null);
+  }
+
+  function showWorkoutPlan() {
+    if (!nextWorkout) setShowWorkoutForm(true);
+    document.getElementById('workout-plan')?.scrollIntoView({ behavior: 'smooth' });
   }
 
   return (
@@ -201,7 +274,14 @@ export default function FithubDashboard({ today, initialState = {}, hasSavedStat
       <div className={styles.container}>
         <section className={styles.hero}>
           <div>
-            <div className={styles.eyebrow}><span className={styles.pulse} /> Fithub dashboard · <span aria-live="polite">{syncState === 'saving' ? 'Saving…' : syncState === 'error' ? 'Sync failed' : 'Saved to cloud'}</span></div>
+            <div className={styles.eyebrow}>
+              <span className={styles.pulse} />
+              Fithub dashboard ·
+              <span className={syncState === 'error' ? styles.syncError : ''} aria-live="polite">
+                {syncState === 'saving' ? 'Saving…' : syncState === 'error' ? 'Sync failed' : 'Up to date'}
+              </span>
+              {syncState === 'error' && <button className={styles.retryButton} type="button" onClick={() => setSaveAttempt((attempt) => attempt + 1)}>Retry</button>}
+            </div>
             <h1>Build your streak.<br /><span>Own your progress.</span></h1>
             <p>Small actions, repeated daily. Keep your training, habits, and plan together.</p>
           </div>
@@ -219,12 +299,12 @@ export default function FithubDashboard({ today, initialState = {}, hasSavedStat
             </div>
             <div className={styles.statRow}>
               <div><strong>{visitCount}</strong><span>gym days</span></div>
-              <div><strong>7</strong><span>week streak</span></div>
-              <div className={styles.streak}><Icon name="flame" /><strong>18</strong><span>best streak</span></div>
+              <div><strong>{streaks.current}</strong><span>day streak</span></div>
+              <div className={styles.streak}><Icon name="flame" /><strong>{streaks.best}</strong><span>best streak</span></div>
             </div>
           </div>
-          <ActivityGrid activity={activity} today={today} />
-          <div className={styles.legend} aria-label="Activity intensity legend">
+          <ActivityGrid activity={activity} today={today} visitCount={visitCount} />
+          <div className={styles.legend} aria-hidden="true">
             <span>Less</span>
             {[0, 1, 2, 3, 4].map((level) => <i className={`${styles.activityDay} ${styles[`level${level}`]}`} key={level} />)}
             <span>More</span>
@@ -238,37 +318,42 @@ export default function FithubDashboard({ today, initialState = {}, hasSavedStat
                 <span className={styles.kicker}>Today</span>
                 <h2 id="goals-title">Daily goals</h2>
               </div>
-              <div className={styles.progressLabel}>{completed.length}/{defaultGoals.length}</div>
+              <button className={styles.smallAddButton} type="button" onClick={() => setShowGoalForm((current) => !current)} aria-expanded={showGoalForm} aria-controls="goal-form"><Icon name={showGoalForm ? 'close' : 'plus'} size={15} /> {showGoalForm ? 'Cancel' : 'Add goal'}</button>
             </div>
-            <div className={styles.progressTrack} aria-label={`${completion}% of today's goals complete`}>
+            <div className={styles.progressTrack} role="progressbar" aria-label="Today's goal progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow={completion}>
               <span style={{ width: `${completion}%` }} />
             </div>
+            {showGoalForm && <form className={styles.goalForm} id="goal-form" onSubmit={addGoal}><label>Goal<input ref={goalInputRef} name="label" maxLength="80" placeholder="e.g. Stretch for 10 minutes" required /></label><label>Note (optional)<input name="detail" maxLength="120" placeholder="Add a useful cue" /></label><button type="submit">Save goal</button></form>}
             <div className={styles.goalList}>
-              {defaultGoals.map((goal) => {
+              {goals.map((goal) => {
                 const isDone = completed.includes(goal.id);
                 return (
-                  <button className={`${styles.goal} ${isDone ? styles.goalDone : ''}`} type="button" key={goal.id} onClick={() => goal.id === 'gym' ? toggleGymVisit() : toggleGoal(goal.id)} aria-pressed={isDone}>
-                    <span className={styles.goalIcon}><Icon name={goal.icon} /></span>
-                    <span className={styles.goalCopy}><strong>{goal.label}</strong><small>{goal.detail}</small></span>
-                    <span className={styles.checkbox}>{isDone && <Icon name="check" size={15} />}</span>
-                  </button>
+                  <div className={`${styles.goalRow} ${isDone ? styles.goalDone : ''}`} key={goal.id}>
+                    <button className={styles.goal} type="button" onClick={() => toggleGoal(goal.id)} aria-pressed={isDone}>
+                      <span className={styles.goalIcon}><Icon name={goal.icon || 'check'} /></span>
+                      <span className={styles.goalCopy}><strong>{goal.label}</strong>{goal.detail && <small>{goal.detail}</small>}</span>
+                      <span className={styles.checkbox}>{isDone && <Icon name="check" size={15} />}</span>
+                    </button>
+                    <button className={styles.goalDelete} type="button" onClick={() => deleteGoal(goal.id)} aria-label={`Delete ${goal.label}`}><Icon name="trash" size={16} /></button>
+                  </div>
                 );
               })}
+              {!goals.length && <div className={styles.emptyGoals}><h3>No daily goals yet</h3><p>Add goals that fit your own routine.</p></div>}
             </div>
             <div className={styles.goalFooter}>
-              <span>{completion}% complete</span>
-              <span>{completion === 100 ? 'Perfect day.' : 'Keep going — you’re building momentum.'}</span>
+              <span>{completedGoalCount}/{goals.length} complete</span>
+              <span>{goals.length > 0 && completion === 100 ? 'All done for today.' : 'Build a routine that works for you.'}</span>
             </div>
           </section>
 
           <aside className={styles.todayCard}>
             <span className={styles.kicker}>Next workout</span>
             <div className={styles.todayIcon}><Icon name="calendar" size={24} /></div>
-            <p className={styles.todayDay}>{workouts[0]?.day ?? 'No session planned'}</p>
-            <h2>{workouts[0]?.title ?? 'Build your plan'}</h2>
-            <p>{workouts[0]?.exercises.length ?? 0} exercises · Around 60 min</p>
-            <button type="button" onClick={() => document.getElementById('workout-plan')?.scrollIntoView({ behavior: 'smooth' })}>
-              View workout <Icon name="arrow" size={17} />
+            <p className={styles.todayDay}>{nextWorkout ? `${nextWorkout.timing} · ${nextWorkout.day}` : 'No session planned'}</p>
+            <h2>{nextWorkout?.title ?? 'Build your plan'}</h2>
+            <p>{nextWorkout ? `${nextWorkout.exercises.length} ${nextWorkout.exercises.length === 1 ? 'exercise' : 'exercises'} in your plan` : 'Add a workout to shape your week.'}</p>
+            <button type="button" onClick={showWorkoutPlan}>
+              {nextWorkout ? 'View workout' : 'Add first workout'} <Icon name="arrow" size={17} />
             </button>
           </aside>
         </div>
@@ -280,13 +365,13 @@ export default function FithubDashboard({ today, initialState = {}, hasSavedStat
               <h2 id="plan-title">Workout plan</h2>
               <p>Structure your week and show up knowing exactly what to do.</p>
             </div>
-            <button className={styles.addButton} type="button" onClick={() => setShowWorkoutForm((current) => !current)} aria-expanded={showWorkoutForm}>
-              <Icon name={showWorkoutForm ? 'check' : 'plus'} size={18} /> {showWorkoutForm ? 'Done' : 'Add workout'}
+            <button className={styles.addButton} type="button" onClick={() => setShowWorkoutForm((current) => !current)} aria-expanded={showWorkoutForm} aria-controls="workout-form">
+              <Icon name={showWorkoutForm ? 'close' : 'plus'} size={18} /> {showWorkoutForm ? 'Cancel' : 'Add workout'}
             </button>
           </div>
 
           {showWorkoutForm && (
-            <form className={styles.workoutForm} onSubmit={addWorkout}>
+            <form className={styles.workoutForm} id="workout-form" onSubmit={addWorkout}>
               <label>
                 Day
                 <select name="day" defaultValue="Tuesday">
@@ -295,22 +380,22 @@ export default function FithubDashboard({ today, initialState = {}, hasSavedStat
               </label>
               <label>
                 Workout name
-                <input name="title" placeholder="e.g. Upper body" required />
+                <input ref={workoutTitleRef} name="title" maxLength="80" placeholder="e.g. Upper body" required />
               </label>
               <label className={styles.exerciseField}>
                 Exercises <span>One per line</span>
-                <textarea name="exercises" placeholder={'Incline press · 4 × 8\nLat pulldown · 3 × 10'} rows="3" required />
+                <textarea name="exercises" maxLength="3600" placeholder={'Incline press · 4 × 8\nLat pulldown · 3 × 10'} rows="3" required />
               </label>
               <button type="submit">Save workout</button>
             </form>
           )}
 
           <div className={styles.workoutGrid}>
-            {workouts.map((workout, index) => (
-              <article className={`${styles.workoutCard} ${styles[workout.tone]}`} key={workout.id}>
+            {orderedWorkouts.map((workout, index) => (
+              <article className={`${styles.workoutCard} ${styles[workout.tone]} ${nextWorkout?.id === workout.id ? styles.nextWorkoutCard : ''}`} key={workout.id}>
                 <div className={styles.workoutTop}>
-                  <span>{String(index + 1).padStart(2, '0')}</span>
-                  <button type="button" onClick={() => setWorkouts((current) => current.filter((item) => item.id !== workout.id))} aria-label={`Delete ${workout.title}`} title="Delete workout">
+                  <div><span>{String(index + 1).padStart(2, '0')}</span>{nextWorkout?.id === workout.id && <span className={styles.nextLabel}>Up next</span>}</div>
+                  <button type="button" onClick={() => deleteWorkout(workout.id)} aria-label={`Delete ${workout.title}`} title="Delete workout">
                     <Icon name="trash" size={17} />
                   </button>
                 </div>
@@ -331,6 +416,12 @@ export default function FithubDashboard({ today, initialState = {}, hasSavedStat
           </div>
         </section>
       </div>
+      {deletedItem && (
+        <div className={styles.undoNotice} aria-live="polite">
+          <span>{deletedItem.kind === 'goal' ? 'Goal' : 'Workout'} deleted.</span>
+          <button type="button" onClick={undoDelete}>Undo</button>
+        </div>
+      )}
     </div>
   );
 }

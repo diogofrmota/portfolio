@@ -41,13 +41,15 @@
 .content { min-height: 100%; display: block; padding: 54px clamp(28px, 5vw, 74px) 80px; }
 .pageHeader { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; }
 .eyebrow { display: inline-flex; align-items: center; gap: 6px; color: #a14239; font-size: .65rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.syncRetry { color: var(--red-dark); font-size: inherit; font-weight: inherit; letter-spacing: inherit; text-decoration: underline; text-underline-offset: 3px; text-transform: inherit; }
+.syncRetry:hover { color: #851f19; }
 .pageHeader h1 { margin: 8px 0 8px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(2.3rem, 5vw, 4.25rem); font-weight: 600; letter-spacing: -.055em; line-height: .98; }
 .pageHeader p { max-width: 590px; color: var(--muted); font-size: .88rem; line-height: 1.6; }
 .primaryButton { min-height: 46px; display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; gap: 8px; padding: 0 17px; border-radius: 12px; background: var(--red); color: #fff; box-shadow: 0 8px 20px rgba(230, 59, 46, .18); font-size: .76rem; font-weight: 800; }
 .primaryButton:hover { background: var(--red-dark); transform: translateY(-1px); }
 .summary { display: flex; align-items: center; gap: 17px; margin: 30px 0 24px; color: var(--muted); font-size: .68rem; }
 .summary strong { color: var(--ink); font-size: .74rem; }
-.summary i { width: 3px; height: 3px; border-radius: 50%; background: #c9bbb6; }
+.summary > span[aria-hidden] { color: #c9bbb6; }
 .calendarLayout { display: grid; grid-template-columns: minmax(0, 1fr) 260px; align-items: start; gap: 18px; }
 .calendarCard, .upNext, .listSection { border: 1px solid var(--line); border-radius: 20px; background: rgba(255, 255, 255, .86); box-shadow: 0 12px 40px rgba(71, 42, 34, .045); }
 .calendarCard { overflow: hidden; }
@@ -61,10 +63,11 @@
 .weekdays span { padding: 13px 7px; color: #95837e; font-size: .57rem; font-weight: 800; letter-spacing: .07em; text-align: center; text-transform: uppercase; }
 .monthGrid { background: var(--line); gap: 1px; }
 .day { min-width: 0; min-height: 104px; padding: 9px; background: #fffdfb; }
-.day > span { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; font-size: .66rem; font-weight: 750; }
+.day > time { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; font-size: .66rem; font-weight: 750; }
 .mutedDay { background: #faf6f3; color: #b9aaa5; }
-.today > span { background: var(--red); color: #fff; }
-.calendarEvent { margin-top: 5px; overflow: hidden; padding: 5px 6px; border-left: 3px solid var(--event-color); border-radius: 4px; background: color-mix(in srgb, var(--event-color) 10%, white); color: #532621; font-size: .58rem; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.today > time { background: var(--red); color: #fff; }
+.calendarEvent { width: 100%; display: block; margin-top: 5px; overflow: hidden; padding: 5px 6px; border-left: 3px solid var(--event-color); border-radius: 4px; background: color-mix(in srgb, var(--event-color) 10%, white); color: #532621; font-size: .58rem; font-weight: 700; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
+.calendarEvent:hover { background: color-mix(in srgb, var(--event-color) 17%, white); }
 .day small { display: block; margin: 4px 0 0 7px; color: var(--muted); font-size: .54rem; }
 .upNext { padding: 23px; }
 .upNext h3 { margin: 5px 0 21px; font-family: Georgia, "Times New Roman", serif; font-size: 1.35rem; }
@@ -75,13 +78,14 @@
 .agendaList time span { font-size: .51rem; font-weight: 800; text-transform: uppercase; }
 .agendaList h4 { margin: 2px 0 4px; font-size: .72rem; line-height: 1.35; }
 .agendaList p { color: var(--muted); font-size: .61rem; }
+.agendaEmpty { padding-top: 14px; border-top: 1px solid #eee4e0; color: var(--muted); font-size: .67rem; line-height: 1.55; }
 .taskColumns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
 .listSection { padding: 22px; }
 .listTitle { display: flex; align-items: center; justify-content: space-between; margin-bottom: 17px; }
 .listTitle h2 { margin: 0; font-family: Georgia, serif; font-size: 1.28rem; }
 .listTitle span { min-width: 26px; padding: 5px; border-radius: 99px; background: #fff0ec; color: #a63229; font-size: .62rem; font-weight: 800; text-align: center; }
 .taskList { display: grid; gap: 9px; }
-.task { display: grid; grid-template-columns: 28px 1fr 34px; align-items: start; gap: 11px; padding: 15px; border: 1px solid #eadfdb; border-radius: 13px; background: #fffdfb; }
+.task { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; align-items: start; gap: 11px; padding: 15px; border: 1px solid #eadfdb; border-radius: 13px; background: #fffdfb; }
 .checkbox { width: 24px; height: 24px; display: grid; place-items: center; border: 1.5px solid #d6c5c0; border-radius: 7px; color: white; }
 .checkbox:hover { border-color: var(--red); }
 .taskDone .checkbox { border-color: var(--red); background: var(--red); }
@@ -89,15 +93,16 @@
 .task p { color: var(--muted); font-size: .62rem; line-height: 1.45; }
 .task time { display: block; margin-top: 9px; color: #a14239; font-size: .57rem; font-weight: 750; }
 .taskDone h3 { color: #9f908b; text-decoration: line-through; }
-.deleteButton { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 9px; color: #a69691; }
-.deleteButton:hover { background: #fff0ec; color: var(--red); }
+.itemActions { display: flex; align-items: center; gap: 2px; }
+.itemActions button { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 9px; color: #a69691; }
+.itemActions button:hover { background: #fff0ec; color: var(--red); }
 .collectionGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .collectionCard { min-height: 250px; display: flex; align-items: flex-start; flex-direction: column; padding: 20px; border-radius: 18px; color: #462621; }
 .tone0 { background: #ffdcd4; }.tone1 { background: #f7e4b8; }.tone2 { background: #d7e9df; }.tone3 { background: #e8dff0; }
 .cardTop { width: 100%; display: flex; align-items: center; justify-content: space-between; }
 .cardTop > span { font-size: .56rem; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
-.cardTop button { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 9px; color: currentColor; opacity: .6; }
-.cardTop button:hover { background: rgba(255,255,255,.45); opacity: 1; }
+.cardTop .itemActions button { width: 32px; height: 32px; color: currentColor; opacity: .6; }
+.cardTop .itemActions button:hover { background: rgba(255,255,255,.45); opacity: 1; }
 .cardIcon { width: 44px; height: 44px; display: grid; place-items: center; margin-top: 30px; border-radius: 13px; background: rgba(255,255,255,.5); }
 .collectionCard h2 { margin: auto 0 6px; font-family: Georgia, serif; font-size: 1.38rem; letter-spacing: -.03em; line-height: 1.05; }
 .collectionCard p, .collectionCard time { color: rgba(70, 38, 33, .72); font-size: .64rem; line-height: 1.45; }
@@ -118,18 +123,25 @@
 .dialog input:focus, .dialog textarea:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(230, 59, 46, .12); }
 .invitePanel { display: grid; justify-items: start; gap: 9px; margin-top: 22px; padding: 18px; border-radius: 14px; background: #fff0ec; }
 .invitePanel span, .invitePanel small { color: var(--muted); font-size: .62rem; }
-.invitePanel strong { color: var(--red-dark); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 1.7rem; letter-spacing: .18em; }
+.invitePanel strong { color: var(--red-dark); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 1.7rem; letter-spacing: .18em; user-select: all; }
 .invitePanel button, .joinForm button { min-height: 40px; padding: 0 14px; border-radius: 9px; background: var(--red); color: white; font-size: .67rem; font-weight: 800; }
 .invitePanel button:hover, .joinForm button:hover { background: var(--red-dark); }
 .invitePanel button:disabled, .joinForm button:disabled { cursor: wait; opacity: .6; }
 .joinForm { grid-template-columns: 1fr auto; align-items: end; }
 .joinForm input { text-transform: uppercase; letter-spacing: .12em; }
-.dialogMessage { min-height: 1.2em; margin-top: 12px; color: var(--red-dark); font-size: .65rem; }
+.joinForm .joinWarning { grid-column: 1 / -1; color: var(--red-dark); font-size: .61rem; line-height: 1.45; }
+.dialogMessage, .dialogError { min-height: 1.2em; margin-top: 12px; font-size: .65rem; }
+.dialogMessage { color: #426b50; }
+.dialogError { color: var(--red-dark); }
 .formActions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 7px; }
 .formActions button { min-height: 43px; padding: 0 15px; border: 1px solid var(--line); border-radius: 10px; color: #66534e; font-size: .69rem; font-weight: 800; }
 .formActions button:last-child { border-color: var(--red); background: var(--red); color: white; }
 .formActions button:last-child:hover { background: var(--red-dark); }
 .app button:focus-visible { outline: 3px solid rgba(230, 59, 46, .3); outline-offset: 2px; }
+.app button:disabled { cursor: wait; opacity: .55; }
+.undoToast { position: fixed; z-index: 120; right: 24px; bottom: 24px; display: flex; align-items: center; gap: 18px; max-width: min(420px, calc(100vw - 32px)); padding: 13px 15px; border-radius: 12px; background: #2a1714; color: #fff; box-shadow: 0 16px 44px rgba(42, 23, 20, .24); font-size: .72rem; }
+.undoToast span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.undoToast button { flex: 0 0 auto; color: #ffb8ae; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
 
 @media (max-width: 1040px) {
   .app { grid-template-columns: 190px minmax(0, 1fr); }
@@ -153,14 +165,14 @@
   .pageHeader h1 { font-size: clamp(2.45rem, 13vw, 3.7rem); }
   .primaryButton { width: 100%; }
   .summary { gap: 9px; margin-top: 24px; overflow: hidden; white-space: nowrap; }
-  .summary span:last-child, .summary i:last-of-type { display: none; }
+  .summary > span:nth-last-child(-n + 2) { display: none; }
   .calendarToolbar { min-height: 64px; padding: 0 14px; }
   .calendarToolbar h2 { font-size: 1.05rem; }
   .calendarControls button:first-child { display: none; }
   .weekdays { padding-inline: 4px; }
   .weekdays span { padding-inline: 2px; }
   .day { min-height: 72px; padding: 5px 3px; }
-  .day > span { width: 21px; height: 21px; margin: 0 auto; font-size: .59rem; }
+  .day > time { width: 21px; height: 21px; margin: 0 auto; font-size: .59rem; }
   .calendarEvent { width: 7px; height: 7px; margin: 5px auto 0; padding: 0; border: 0; border-radius: 50%; background: var(--event-color); color: transparent; }
   .day small { display: none; }
   .taskColumns, .collectionGrid { grid-template-columns: 1fr; }
@@ -168,6 +180,7 @@
   .dialog { padding: 26px 20px 20px; border-radius: 18px; }
   .formActions { display: grid; grid-template-columns: 1fr 1.4fr; }
   .joinForm { grid-template-columns: 1fr; }
+  .undoToast { right: 16px; bottom: 84px; left: 16px; justify-content: space-between; }
 }
 
 @media (max-width: 420px) {

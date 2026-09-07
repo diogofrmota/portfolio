@@ -2,11 +2,11 @@
 
 import { signIn } from '../auth';
 
-const appPaths = new Set(['/tvsync', '/couple-planner', '/fithub']);
+function safeAppPath(value) {
+  const path = typeof value === 'string' ? value : '';
+  return path === '/fithub' || path === '/couple-planner' || path === '/tvsync' || path.startsWith('/tvsync/') ? path : '/apps';
+}
 
 export async function continueWithGoogle(formData) {
-  const requestedPath = formData.get('callbackUrl');
-  const redirectTo = appPaths.has(requestedPath) ? requestedPath : '/apps';
-
-  await signIn('google', { redirectTo });
+  await signIn('google', { redirectTo: safeAppPath(formData.get('callbackUrl')) });
 }

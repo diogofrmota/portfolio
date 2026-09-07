@@ -6,8 +6,9 @@ import { continueWithGoogle } from '../auth-actions';
 export const metadata = { title: 'Login' };
 
 export default async function Login({ searchParams }) {
-  if (await auth()) redirect('/apps');
-  const { error, mode } = await searchParams;
+  const { callbackUrl: requestedCallback, error, mode } = await searchParams;
+  const callbackUrl = requestedCallback === '/fithub' || requestedCallback === '/couple-planner' || requestedCallback === '/tvsync' || requestedCallback?.startsWith('/tvsync/') ? requestedCallback : '/apps';
+  if (await auth()) redirect(callbackUrl);
   const isRegistering = mode === 'register';
 
   return (
@@ -16,7 +17,7 @@ export default async function Login({ searchParams }) {
       <p>{isRegistering ? 'register once to access all apps' : 'one account for all apps'}</p>
       {error && <p>login failed. please try again.</p>}
       <form action={continueWithGoogle}>
-        <input type="hidden" name="callbackUrl" value="/apps" />
+        <input type="hidden" name="callbackUrl" value={callbackUrl} />
         <button className="google-button" type="submit">
           <svg aria-hidden="true" viewBox="0 0 18 18" width="18" height="18">
             <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.26-.16-1.86H9v3.52h4.84a4.14 4.14 0 0 1-1.8 2.72v2.28h2.92c1.71-1.57 2.68-3.9 2.68-6.66Z" />
@@ -29,7 +30,7 @@ export default async function Login({ searchParams }) {
       </form>
       <p className="auth-register-copy">
         {isRegistering ? 'already registered? ' : 'not registered? '}
-        <Link href={isRegistering ? '/login' : '/login?mode=register'}>
+        <Link href={{ pathname: '/login', query: isRegistering ? { callbackUrl } : { mode: 'register', callbackUrl } }}>
           {isRegistering ? 'login' : 'register'}
         </Link>
       </p>

@@ -11,16 +11,14 @@ export const metadata = {
 export default async function CouplePlanner() {
   const session = await auth();
   if (!session?.user) redirect('/login?callbackUrl=/couple-planner');
-  const now = new Date();
   const workspace = await getCouplePlannerWorkspace(session.user);
 
   return (
     <CouplePlannerDashboard
       userName={session?.user?.name || session?.user?.email?.split('@')[0] || 'You'}
-      today={now.toISOString().slice(0, 10)}
+      today={new Date().toISOString().slice(0, 10)}
       initialData={workspace.data}
-      hasSavedData={Object.keys(workspace.data).length > 0}
-      workspace={{ role: workspace.role, memberCount: workspace.memberCount, invite: workspace.invite }}
+      workspace={{ id: workspace.id, role: workspace.role, memberCount: workspace.memberCount, invite: workspace.invite }}
     />
   );
 }
